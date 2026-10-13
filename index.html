@@ -47,25 +47,25 @@
         <div class="text-center mb-12">
             <h2 class="text-4xl font-black mb-3">Oʻyinni tanlang</h2>
             <p class="text-slate-400 max-w-lg mx-auto">
-                Oʻzingizga qulay tilni tanlang va oʻyinni boshlang!
+                Oʻzingizga qulay o'yinni tanlang va boshlang!
             </p>
         </div>
 
         <!-- Kartochkalar -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            <!-- 1. O'ZBEKCHA O'YIN (game1.html ga ulandi) -->
+            <!-- 1. O'ZBEKCHA O'YIN (game1.html) -->
             <div class="game-card rounded-2xl p-6 flex flex-col justify-between border-t-4 border-t-emerald-500">
                 <div>
                     <div class="w-full h-44 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-700 flex items-center justify-center mb-5 text-6xl shadow-lg">
                         🇺🇿
                     </div>
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">O'zbek tili</span>
+                        <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">1-O'yin</span>
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">Oʻzbekcha Oʻyin</h3>
                     <p class="text-slate-400 text-sm mb-6">
-                        game1.html faylidagi o'zbekcha o'yin.
+                        game1.html faylidagi o'yin.
                     </p>
                 </div>
                 <button onclick="startGame('uz')" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
@@ -74,18 +74,18 @@
                 </button>
             </div>
 
-            <!-- 2. ENGLISH GAME -->
+            <!-- 2. INGLIZCHA O'YIN (game2.html) -->
             <div class="game-card rounded-2xl p-6 flex flex-col justify-between border-t-4 border-t-indigo-500">
                 <div>
                     <div class="w-full h-44 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-700 flex items-center justify-center mb-5 text-6xl shadow-lg">
                         🇬🇧
                     </div>
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">English</span>
+                        <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">2-O'yin</span>
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">English Game</h3>
                     <p class="text-slate-400 text-sm mb-6">
-                        Ingliz tilidagi o'yin.
+                        game2.html faylidagi o'yin.
                     </p>
                 </div>
                 <button onclick="startGame('en')" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
@@ -107,9 +107,9 @@
             </button>
         </div>
         
-        <!-- O'yin oynasi to'liq hajmda ishlaydi -->
+        <!-- O'yin oynasi -->
         <div class="flex-grow p-2 flex items-center justify-center overflow-hidden" id="gameContainer">
-            <!-- Iframe orqali game1.html yuklanadi -->
+            <!-- game1.html yoki game2.html iframe orqali yuklanadi -->
         </div>
     </div>
 
@@ -127,12 +127,7 @@
             },
             'en': {
                 title: "🇬🇧 English Game",
-                content: `
-                    <div class="text-center p-8 bg-slate-900 rounded-2xl border border-indigo-500/30 shadow-2xl max-w-md w-full">
-                        <h1 class="text-2xl font-bold text-indigo-400 mb-4">🇬🇧 English Game</h1>
-                        <p class="text-slate-300">Tez kunda qo'shiladi!</p>
-                    </div>
-                `
+                content: `<iframe src="game2.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`
             }
         };
 
