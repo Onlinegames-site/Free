@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Portal - O'zbekcha va Inglizcha O'yinlar</title>
+    <title>Game Portal - O'yinlar</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -34,7 +34,7 @@
         <div class="flex items-center space-x-3">
             <i class="fa-solid font-bold text-indigo-500 text-3xl fa-gamepad animate-pulse"></i>
             <h1 class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent">
-                MULTILINGUAL GAMES
+                GAME PORTAL
             </h1>
         </div>
         <div class="flex items-center space-x-2 text-sm text-slate-300">
@@ -45,16 +45,16 @@
     <!-- Asosiy menyu -->
     <main class="max-w-5xl mx-auto px-4 py-12 w-full flex-grow">
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-black mb-3">Oʻyin tilini tanlang</h2>
+            <h2 class="text-4xl font-black mb-3">Oʻyinni tanlang</h2>
             <p class="text-slate-400 max-w-lg mx-auto">
-                Oʻzingizga qulay tilni tanlang va qiziqarli oʻyinlarni boshlang!
+                Oʻzingizga qulay tilni tanlang va oʻyinni boshlang!
             </p>
         </div>
 
-        <!-- 2 ta Til va O'yin Kartochkalari -->
+        <!-- Kartochkalar -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            <!-- 1. O'ZBEKCHA O'YIN -->
+            <!-- 1. O'ZBEKCHA O'YIN (game1.html ga ulandi) -->
             <div class="game-card rounded-2xl p-6 flex flex-col justify-between border-t-4 border-t-emerald-500">
                 <div>
                     <div class="w-full h-44 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-700 flex items-center justify-center mb-5 text-6xl shadow-lg">
@@ -62,11 +62,10 @@
                     </div>
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">O'zbek tili</span>
-                        <span class="text-xs text-slate-400"><i class="fa-solid fa-gamepad text-emerald-400 mr-1"></i> Interaktiv</span>
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">Oʻzbekcha Oʻyin</h3>
                     <p class="text-slate-400 text-sm mb-6">
-                        Toʻliq oʻzbek tilida tayyorlangan qiziqarli oʻyin. Qoidalari va savollari oʻzbek tilida.
+                        game1.html faylidagi o'zbekcha o'yin.
                     </p>
                 </div>
                 <button onclick="startGame('uz')" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
@@ -83,11 +82,10 @@
                     </div>
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">English</span>
-                        <span class="text-xs text-slate-400"><i class="fa-solid fa-gamepad text-indigo-400 mr-1"></i> Interactive</span>
                     </div>
                     <h3 class="text-2xl font-bold mb-2 text-white">English Game</h3>
                     <p class="text-slate-400 text-sm mb-6">
-                        An exciting game in English. Perfect for practicing and testing your English skills while playing.
+                        Ingliz tilidagi o'yin.
                     </p>
                 </div>
                 <button onclick="startGame('en')" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
@@ -100,51 +98,39 @@
     </main>
 
     <!-- O'YIN OYNASI (Modal) -->
-    <div id="gameModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-lg hidden flex-col z-50">
+    <div id="gameModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-lg hidden flex-col z-50">
         <div class="p-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
             <h2 id="currentGameTitle" class="text-xl font-bold text-indigo-400">Game Window</h2>
             <button onclick="closeGame()" class="px-4 py-2 rounded-lg bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600 hover:text-white transition font-bold flex items-center space-x-2">
                 <i class="fa-solid fa-xmark"></i>
-                <span id="closeBtnText">Chiqish / Exit</span>
+                <span>Chiqish / Exit</span>
             </button>
         </div>
         
-        <div class="flex-grow p-4 flex items-center justify-center overflow-auto" id="gameContainer">
-            <!-- O'yin kodi shu yerga joylashadi -->
+        <!-- O'yin oynasi to'liq hajmda ishlaydi -->
+        <div class="flex-grow p-2 flex items-center justify-center overflow-hidden" id="gameContainer">
+            <!-- Iframe orqali game1.html yuklanadi -->
         </div>
     </div>
 
     <!-- Footer -->
     <footer class="w-full text-center p-6 text-slate-500 text-sm border-t border-slate-800/50">
-        <p>&copy; 2026 Multilingual Game Portal.</p>
+        <p>&copy; 2026 Game Portal.</p>
     </footer>
 
-    <!-- JavaScript Logikasi -->
+    <!-- JavaScript -->
     <script>
         const games = {
             'uz': {
                 title: "🇺🇿 O'zbekcha O'yin",
-                // O'zbekcha o'yiningiz kodini shu yerga qo'yasiz:
-                content: `
-                    <div class="text-center p-8 bg-slate-900 rounded-2xl border border-emerald-500/30 shadow-2xl max-w-md w-full">
-                        <h1 class="text-2xl font-bold text-emerald-400 mb-4">🇺🇿 O'zbekcha O'yin Ishga tushdi!</h1>
-                        <p class="text-slate-300 mb-6">O'zbek tilidagi o'yiningiz kodi mana shu yerda ishlaydi.</p>
-                        <button onclick="alert('O\'yin muvaffaqiyatli ishlayapti!')" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-white shadow-lg">
-                            Test tugmasi
-                        </button>
-                    </div>
-                `
+                content: `<iframe src="game1.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`
             },
             'en': {
                 title: "🇬🇧 English Game",
-                // Inglizcha o'yiningiz kodini shu yerga qo'yasiz:
                 content: `
                     <div class="text-center p-8 bg-slate-900 rounded-2xl border border-indigo-500/30 shadow-2xl max-w-md w-full">
-                        <h1 class="text-2xl font-bold text-indigo-400 mb-4">🇬🇧 English Game Started!</h1>
-                        <p class="text-slate-300 mb-6">Your English game code will run right here.</p>
-                        <button onclick="alert('The game is working successfully!')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-white shadow-lg">
-                            Test Button
-                        </button>
+                        <h1 class="text-2xl font-bold text-indigo-400 mb-4">🇬🇧 English Game</h1>
+                        <p class="text-slate-300">Tez kunda qo'shiladi!</p>
                     </div>
                 `
             }
