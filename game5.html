@@ -3,25 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarmoq muammolari va kommunikatsiya - Jamoaviy Viktorina</title>
+    <title>Cyberpunk Tarmoq Viktorinasi</title>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-color: #1f2937;
+            --bg-color: #0d0e15;
+            --card-bg: #161824;
+            --text-color: #f3f4f6;
+            --neon-blue: #00f0ff;
+            --neon-green: #39ff14;
+            --neon-yellow: #ffe600;
+            --neon-red: #ff0055;
+            --neon-purple: #b026ff;
+            --border-glow: rgba(0, 240, 255, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            margin: 0;
             padding: 20px;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(176, 38, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.1) 0%, transparent 40%);
         }
 
         .container {
@@ -35,13 +47,16 @@
         }
 
         header h1 {
-            color: var(--primary);
-            margin-bottom: 5px;
-            font-size: 2.2rem;
+            color: var(--neon-blue);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+            margin-bottom: 10px;
         }
 
         header p {
-            color: #6b7280;
+            color: #a0aec0;
             font-size: 1.1rem;
         }
 
@@ -57,85 +72,128 @@
             background: var(--card-bg);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             text-align: center;
-            border-top: 5px solid var(--primary);
-            transition: transform 0.2s;
+            border: 2px solid var(--border-glow);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .team-card:hover {
-            transform: translateY(-3px);
-        }
+        .team-card:nth-child(1) { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+        .team-card:nth-child(2) { border-color: var(--neon-green); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2); }
+        .team-card:nth-child(3) { border-color: var(--neon-purple); box-shadow: 0 0 10px rgba(176, 38, 255, 0.2); }
 
-        .team-card input {
-            font-size: 1.2rem;
+        .team-title {
+            font-size: 1.4rem;
             font-weight: bold;
-            text-align: center;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 5px;
-            width: 80%;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+
+        .team-card:nth-child(1) .team-title { color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); }
+        .team-card:nth-child(2) .team-title { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
+        .team-card:nth-child(3) .team-title { color: var(--neon-purple); text-shadow: 0 0 5px var(--neon-purple); }
 
         .team-score {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
-            color: var(--primary);
-            margin: 10px 0;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+            margin: 5px 0;
         }
 
-        /* O'yin maydoni - 15 ta test paneli */
+        /* O'yin maydoni */
         .board-section {
             background: var(--card-bg);
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .category-title {
             font-size: 1.3rem;
             font-weight: bold;
-            margin: 20px 0 10px 0;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #e5e7eb;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+
+        .category-title.easy { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
+        .category-title.medium { color: var(--neon-yellow); text-shadow: 0 0 8px var(--neon-yellow); }
+        .category-title.hard { color: var(--neon-red); text-shadow: 0 0 8px var(--neon-red); }
 
         .questions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
         }
 
         .q-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1.1rem;
+            background: #1f2338;
+            color: #fff;
+            border: 2px solid transparent;
+            padding: 18px 10px;
+            font-size: 1.2rem;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
         }
 
-        .q-btn:hover:not(:disabled) {
-            background-color: var(--primary-dark);
-            transform: scale(1.03);
+        .q-btn.easy {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.1);
+        }
+        .q-btn.easy:hover:not(:disabled) {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-green);
+            transform: translateY(-2px);
+        }
+
+        .q-btn.medium {
+            border-color: var(--neon-yellow);
+            color: var(--neon-yellow);
+            box-shadow: inset 0 0 10px rgba(255, 230, 0, 0.1);
+        }
+        .q-btn.medium:hover:not(:disabled) {
+            background: var(--neon-yellow);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-yellow);
+            transform: translateY(-2px);
+        }
+
+        .q-btn.hard {
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            box-shadow: inset 0 0 10px rgba(255, 0, 85, 0.1);
+        }
+        .q-btn.hard:hover:not(:disabled) {
+            background: var(--neon-red);
+            color: #fff;
+            box-shadow: 0 0 15px var(--neon-red);
+            transform: translateY(-2px);
         }
 
         .q-btn.answered {
-            background-color: #9ca3af;
+            background: #11131f !important;
+            border-color: #333 !important;
+            color: #555 !important;
+            box-shadow: none !important;
             cursor: not-allowed;
-            transform: none;
-            opacity: 0.6;
+            transform: none !important;
+            opacity: 0.5;
         }
-
-        .q-btn.easy { background-color: #10b981; }
-        .q-btn.medium { background-color: #f59e0b; }
-        .q-btn.hard { background-color: #ef4444; }
 
         /* Modal oyna */
         .modal {
@@ -145,108 +203,196 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(5, 6, 10, 0.85);
+            backdrop-filter: blur(8px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 15px;
+            padding: 20px;
         }
 
         .modal-content {
-            background: white;
+            background: var(--card-bg);
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 16px;
             max-width: 650px;
             width: 100%;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 0.3s ease-in-out;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+            animation: modalSlide 0.3s ease-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes modalSlide {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .modal-header span:first-child {
+            color: var(--neon-blue);
             font-weight: bold;
-            color: #4b5563;
+            text-transform: uppercase;
+        }
+
+        .modal-header span:last-child {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
         }
 
         .modal-question {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+            font-size: 1.3rem;
             line-height: 1.5;
+            margin-bottom: 25px;
+            color: #fff;
         }
 
         .options-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 25px;
         }
 
         .option-btn {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            padding: 12px 15px;
+            background: #1f2338;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 20px;
             text-align: left;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
+            color: #fff;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .option-btn:hover:not(:disabled) {
-            background: #eef2ff;
-            border-color: var(--primary);
+        .option-btn:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .option-btn.selected {
+            border-color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
         .option-btn.correct {
-            background: #d1fae5 !important;
-            border-color: var(--success) !important;
-            color: #065f46;
-            font-weight: bold;
+            background: rgba(57, 255, 20, 0.2) !important;
+            border-color: var(--neon-green) !important;
+            color: var(--neon-green) !important;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
         }
 
         .option-btn.incorrect {
-            background: #fee2e2 !important;
-            border-color: var(--danger) !important;
-            color: #991b1b;
+            background: rgba(255, 0, 85, 0.2) !important;
+            border-color: var(--neon-red) !important;
+            color: var(--neon-red) !important;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
         }
 
         .team-select-box {
-            margin-top: 15px;
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
+            background: #11131f;
+            padding: 15px;
+            border-radius: 10px;
         }
 
         .team-select-box select {
-            padding: 8px;
+            background: var(--card-bg);
+            color: #fff;
+            border: 1px solid var(--neon-blue);
+            padding: 10px;
             border-radius: 6px;
-            border: 1px solid #d1d5db;
             font-size: 1rem;
+            outline: none;
         }
 
         .action-btn {
-            background: var(--primary);
-            color: white;
+            background: var(--neon-blue);
+            color: #000;
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 12px 25px;
+            border-radius: 8px;
             font-size: 1rem;
-            cursor: pointer;
             font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px var(--neon-blue);
+            transition: all 0.2s;
         }
 
         .action-btn:hover {
-            background: var(--primary-dark);
+            background: #fff;
+            box-shadow: 0 0 20px #fff;
+        }
+
+        /* Boshlang'ich Sozlamalar Modali */
+        .setup-input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .setup-input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        .setup-input-group input {
+            width: 100%;
+            background: #11131f;
+            border: 1px solid var(--neon-blue);
+            padding: 12px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .setup-input-group input:focus {
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        /* Natijalar paneli */
+        .leaderboard-list {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #11131f;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .leaderboard-item.rank-1 { border-color: var(--neon-yellow); box-shadow: 0 0 10px rgba(255, 230, 0, 0.3); }
+        .leaderboard-item.rank-2 { border-color: var(--neon-blue); }
+        .leaderboard-item.rank-3 { border-color: var(--neon-purple); }
+
+        .rank-badge {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 15px;
         }
 
         .reset-container {
@@ -255,54 +401,57 @@
         }
 
         .reset-btn {
-            background: #6b7280;
-            color: white;
-            border: none;
-            padding: 10px 25px;
+            background: transparent;
+            color: #a0aec0;
+            border: 1px solid #a0aec0;
+            padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
+            transition: all 0.2s;
         }
 
-        .reset-btn:hover { background: #4b5563; }
+        .reset-btn:hover {
+            color: #fff;
+            border-color: #fff;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>Tarmoq muammolari va kommunikatsiya</h1>
-        <p>3 ta jamoa uchun 15 ta qiziqarli interaktiv test (Oson, O'rta, Qiyin)</p>
+        <h1>Tarmoq Kommunikatsiyasi</h1>
+        <p>18 ta Neon Viktorina Testi (Har bir bo'limda 6 tadan savol)</p>
     </header>
 
-    <!-- Jamoalar hisoblagichi -->
+    <!-- Jamoalar paneli -->
     <div class="teams-container">
-        <div class="team-card" style="border-top-color: #3b82f6;">
-            <input type="text" id="team1-name" value="1-Jamoa">
+        <div class="team-card">
+            <div class="team-title" id="t1-display-name">1-Jamoa</div>
             <div class="team-score" id="team1-score">0</div>
-            <p>Ball</p>
+            <p>BALL</p>
         </div>
-        <div class="team-card" style="border-top-color: #10b981;">
-            <input type="text" id="team2-name" value="2-Jamoa">
+        <div class="team-card">
+            <div class="team-title" id="t2-display-name">2-Jamoa</div>
             <div class="team-score" id="team2-score">0</div>
-            <p>Ball</p>
+            <p>BALL</p>
         </div>
-        <div class="team-card" style="border-top-color: #f59e0b;">
-            <input type="text" id="team3-name" value="3-Jamoa">
+        <div class="team-card">
+            <div class="team-title" id="t3-display-name">3-Jamoa</div>
             <div class="team-score" id="team3-score">0</div>
-            <p>Ball</p>
+            <p>BALL</p>
         </div>
     </div>
 
     <!-- O'yin taxtasi -->
     <div class="board-section">
-        <div class="category-title" style="color: #10b981;">1-Bo'lim: Oson savollar (10 ball)</div>
+        <div class="category-title easy">1-BO'LIM: OSON (10 BALL / JARIMA -10)</div>
         <div class="questions-grid" id="category-10"></div>
 
-        <div class="category-title" style="color: #f59e0b;">2-Bo'lim: O'rta qiyinlikdagi savollar (20 ball)</div>
+        <div class="category-title medium">2-BO'LIM: O'RTA (20 BALL / JARIMA -20)</div>
         <div class="questions-grid" id="category-20"></div>
 
-        <div class="category-title" style="color: #ef4444;">3-Bo'lim: Qiyin savollar (30 ball)</div>
+        <div class="category-title hard">3-BO'LIM: QIYIN (30 BALL / JARIMA -30)</div>
         <div class="questions-grid" id="category-30"></div>
     </div>
 
@@ -311,208 +460,330 @@
     </div>
 </div>
 
-<!-- Modal Oyna -->
+<!-- Jamoalar nomini kiritish Modali -->
+<div class="modal" id="setupModal" style="display: flex;">
+    <div class="modal-content" style="text-align: center;">
+        <h2 style="color: var(--neon-blue); margin-bottom: 20px;">JAMOALARNIZNI RO'YXATDAN O'TKAZING</h2>
+        <div class="setup-input-group">
+            <label>1-Jamoa nomi:</label>
+            <input type="text" id="input-team1" value="Kiber Lolalar">
+        </div>
+        <div class="setup-input-group">
+            <label>2-Jamoa nomi:</label>
+            <input type="text" id="input-team2" value="Xakerlar">
+        </div>
+        <div class="setup-input-group">
+            <label>3-Jamoa nomi:</label>
+            <input type="text" id="input-team3" value="NetWizards">
+        </div>
+        <button class="action-btn" style="width: 100%; margin-top: 15px;" onclick="startGame()">O'yinni Boshlash</button>
+    </div>
+</div>
+
+<!-- Savol Modali -->
 <div class="modal" id="quizModal">
     <div class="modal-content">
         <div class="modal-header">
-            <span id="modalCategoryTitle">Savol</span>
-            <span id="modalPoints">10 ball</span>
+            <span id="modalCategoryTitle">SAVOL</span>
+            <span id="modalPoints">10 BALL</span>
         </div>
         <div class="modal-question" id="modalQuestionText">Savol matni shu yerda bo'ladi...</div>
         <div class="options-list" id="modalOptionsList"></div>
         
         <div class="team-select-box" id="teamSelectContainer">
-            <label for="answeringTeam">Javob beruvchi jamoa:</label>
-            <select id="answeringTeam">
-                <option value="0">1-Jamoa</option>
-                <option value="1">2-Jamoa</option>
-                <option value="2">3-Jamoa</option>
-            </select>
-            <button class="action-btn" id="submitAnswerBtn" onclick="checkAnswer()">Javobni tasdiqlash</button>
+            <div>
+                <label style="font-size: 0.9rem; color: #a0aec0; display: block;">Javob beruvchi jamoa:</label>
+                <select id="answeringTeam"></select>
+            </div>
+            <button class="action-btn" id="submitAnswerBtn" onclick="checkAnswer()">Tasdiqlash</button>
         </div>
     </div>
 </div>
 
+<!-- O'yin tugash va g'oliblar Modali -->
+<div class="modal" id="winnerModal">
+    <div class="modal-content" style="text-align: center;">
+        <h1 style="color: var(--neon-yellow); text-shadow: 0 0 15px var(--neon-yellow); margin-bottom: 10px;">O'YIN YAKUNLANDI!</h1>
+        <p style="color: #a0aec0;">Barcha savollarga javob berildi. Yakuniy natijalar:</p>
+        
+        <div class="leaderboard-list" id="leaderboardContent"></div>
+
+        <button class="action-btn" onclick="resetGame()">Yangi O'yin Boshlash</button>
+    </div>
+</div>
+
 <script>
-    // 15 ta test ma'lumotlari (Darslik asosida)
+    // Audio synthesizer (Tovush effektlari uchun)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSound(type) {
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'correct') {
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime); // A4
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); // A5
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(110, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+        } else if (type === 'win') {
+            const notes = [261.63, 329.63, 392.00, 523.25];
+            notes.forEach((freq, index) => {
+                const noteOsc = audioCtx.createOscillator();
+                const noteGain = audioCtx.createGain();
+                noteOsc.connect(noteGain);
+                noteGain.connect(audioCtx.destination);
+                noteOsc.frequency.setValueAtTime(freq, audioCtx.currentTime + index * 0.1);
+                noteGain.gain.setValueAtTime(0.2, audioCtx.currentTime + index * 0.1);
+                noteGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + index * 0.1 + 0.3);
+                noteOsc.start(audioCtx.currentTime + index * 0.1);
+                noteOsc.stop(audioCtx.currentTime + index * 0.1 + 0.3);
+            });
+        }
+    }
+
+    // 18 ta test ma'lumotlari (Darslik asosida)
     const questions = [
         // --- OSON (10 ball) ---
         {
             id: 1, points: 10, cat: 'easy',
-            question: "Tarmog'ingiz xavfsizligi buzilishining asosiy sabablaridan biri nima?",
+            question: "Tarmog'ingiz xavfsizligi buzilishining eng ko'p tarqalgan sabablaridan biri nima?",
             options: [
-                "Faqat tashqi xakerlarning hujumlari",
-                "Insonning bexosdan yo'l qo'ygan xatolari",
-                "Quyosh nurlanishining kuchayishi",
-                "Kompyuter monitorining qizib ketishi"
+                "Insonning bexosdan yo'l qo'ygan oddiy xatolari",
+                "Faqat tashqi professional xakerlar hujumi",
+                "Quyosh nurlarining kompyuterga tushishi",
+                "Monitor ekranining o'chib qolishi"
             ],
-            correct: 1
+            correct: 0
         },
         {
             id: 2, points: 10, cat: 'easy',
-            question: "Ma'lumot to'plash maqsadida tarmoq tizimlariga qasdma-qasd qilinadigan harakatlar qanday ataladi?",
+            question: "Ma'lumot to'plash maqsadida tarmoq tizimlariga qasdma-qasd qilinadigan josuslik harakatlari qanday ataladi?",
             options: [
                 "Sanoat josusligi",
                 "Tarmoqni optimallashtirish",
-                "Brauzer sozlamasi",
-                "Ma'lumotlarni arxivlash"
+                "Tizimni yangilash",
+                "Arxivlash jarayoni"
             ],
             correct: 0
         },
         {
             id: 3, points: 10, cat: 'easy',
-            question: "Videokonferensiya uchun quyidagi qaysi texnik qurilma talab qilinadi?",
+            question: "Videokonferensiya o'tkazish uchun zarur bo'lgan asosiy texnik qurilmalar qaysilar?",
             options: [
-                "Faqat oddiy qog'oz printeri",
-                "Displey ekrani, mikrofon va karnaylar",
-                "Faqat klaviatura",
-                "Skaner va nusxa ko'chirish mashinasi"
+                "Displey ekrani, mikrofon, karnaylar va veb-kamera",
+                "Faqat bosma printer va skaner",
+                "Faqat klaviatura va sichqoncha",
+                "Faqat flesh-xotira"
             ],
-            correct: 1
+            correct: 0
         },
         {
             id: 4, points: 10, cat: 'easy',
-            question: "\"Faks\" so'zining asl ma'nosi nima?",
+            question: "\"Faks\" so'zi qaysi so'zning qisqartmasi hisoblanadi va nimani anglatadi?",
             options: [
-                "Tezkor internet",
-                "O'xshash (facsimile)",
-                "Raqamli kod",
-                "Xavfsizlik devori"
+                "\"Facsimile\" bo'lib, o'xshash/nusxa degan ma'noni anglatadi",
+                "\"Fast Access\" bo'lib, tezkor kirishni anglatadi",
+                "\"File Security\" bo'lib, fayl xavfsizligini anglatadi",
+                "\"Full Action\" bo'lib, to'liq harakatni anglatadi"
             ],
-            correct: 1
+            correct: 0
         },
         {
             id: 5, points: 10, cat: 'easy',
-            question: "Foydalanuvchining harakatlarini yozib oladigan va parollarni o'g'irlashda qo'llaniladigan dastur qanday ataladi?",
+            question: "Foydalanuvchining harakatlarini yozib oladigan va parollarni o'g'irlaydigan ayg'oqchi dastur qanday ataladi?",
             options: [
                 "Spyware",
                 "Antivirus",
-                "Brauzer",
+                "Operatsion tizim",
                 "Drayver"
+            ],
+            correct: 0
+        },
+        {
+            id: 6, points: 10, cat: 'easy',
+            question: "Wi-Fi tarmog'iga ulanadigan qurilmalarga qaysilar kirishi mumkin?",
+            options: [
+                "Smartfon, noutbuk va aqlli maishiy texnikalar",
+                "Faqat stasionar kompyuterlar",
+                "Faqat elektr chiroqlari",
+                "Faqat simli telefonlar"
             ],
             correct: 0
         },
 
         // --- O'RTA (20 ball) ---
         {
-            id: 6, points: 20, cat: 'medium',
-            question: "Routeringizning birlamchi kirish ma'lumotlari o'zgartirilmasa, nima sodir bo'lishi mumkin?",
-            options: [
-                "Kompyuter tezligi keskin oshadi",
-                "Odam tarmoq trafigini to'xtatib, maxfiy ma'lumotlaringizga ulanishi mumkin",
-                "Internet tarmoqdan butunlay uzilib qoladi",
-                "Faks xabarlari tez keladi"
-            ],
-            correct: 1
-        },
-        {
             id: 7, points: 20, cat: 'medium',
-            question: "Faks va elektron pochta xabarlarini taqqoslash jadvaliga ko'ra quyidagilardan qaysi biri to'g'ri?",
+            question: "Routeringizning dastlabki (birlamchi) kirish ma'lumotlari o'zgartirilmasa nima sodir bo'lishi mumkin?",
             options: [
-                "Faksni har doim spam xabar sifatida filtrlash oson",
-                "Elektron pochtaning maxfiy qolishi uchun shifrlash zarur",
-                "Faksga hech qachon virus tushmaydi",
-                "Elektron pochtada xabarlarni bloklab bo'lmaydi"
+                "Boshqa shaxs tarmoq trafigini to'xtatib, maxfiy ma'lumotlaringizga ulanishi mumkin",
+                "Internet tezligi 2 barobar oshadi",
+                "Kompyuter ekrani o'chib qoladi",
+                "Faks xabarlari kelmay qoladi"
             ],
-            correct: 1
+            correct: 0
         },
         {
             id: 8, points: 20, cat: 'medium',
-            question: "Intranet tarmoqlarining Internetdan asosiy farqi nimada?",
+            question: "Faks va elektron pochtaning xavfsizlik va xususiyatlar bo'yicha farqi nimada?",
             options: [
-                "Intranet barcha uchun ochiq",
-                "Intranet faqat sun'iy yo'ldosh orqali ishlaydi",
-                "Intranet tashkilotlar tomonidan yaratiladi va unga kirish qat'iy nazorat qilinadi",
-                "Intranetda tarmoq qurilmalari umuman ishlatilmaydi"
+                "Elektron pochtada ma'lumot maxfiyligi uchun shifrlash zarur, faksda esa hujjatlar bosma ko'rinishda uzatiladi",
+                "Faksda har doim viruslar tarqaladi",
+                "Elektron pochta xabarlarini bloklab bo'lmaydi",
+                "Faks faqat sun'iy yo'ldosh orqali ishlaydi"
             ],
-            correct: 2
+            correct: 0
         },
         {
             id: 9, points: 20, cat: 'medium',
-            question: "Audio-konferensiya nima?",
+            question: "Intranet tarmog'ining Internetdan asosiy farqi va afzalligi nimada?",
             options: [
-                "Abonentlar guruhining telefon uskunalari orqali muloqoti",
-                "Faqat bitta shaxsning matnli yozishmasi",
-                "Videokamera orqali suratga olish",
-                "Faqat faks yuborish usuli"
+                "Intranet tashkilotlar ichida yaratilib, unga kirish qat'iy nazorat qilinadi",
+                "Intranet barcha foydalanuvchilar uchun ochiq",
+                "Intranet faqat mobil telefonlarda ishlaydi",
+                "Intranetda ma'lumot uzatish tezligi juda past"
             ],
             correct: 0
         },
         {
             id: 10, points: 20, cat: 'medium',
-            question: "LAN (Local Area Network) tarmoqlarining afzalligi nimadan iborat?",
+            question: "Audio-konferensiya xizmati foydalanuvchilarga qanday imkoniyat beradi?",
             options: [
-                "Geografik qamrovi cheklanmagan va butun dunyoni qamrab oladi",
-                "Oson o'rnatiladi, hamyonbop va kichik geografik hududda tezkor ishlaydi",
-                "Juda qimmat va o'rnatish juda murakkab",
-                "Faqat kosmik stansiyalar uchun mo'ljallangan"
-            ],
-            correct: 1
-        },
-
-        // --- QIYIN (30 ball) ---
-        {
-            id: 11, points: 30, cat: 'hard',
-            question: "Kompyuteringizga to'g'ridan-to'g'ri ulanish imkoni bo'lmagan shaxs internet orqali ochiq tarmoq porti orqali kirishining oldini oluvchi to'g'ri vosita qaysi?",
-            options: [
-                "To'g'ri sozlangan himoya devori (Firewall)",
-                "Oddiy simli karnay",
-                "Veb-kamera",
-                "Printer"
+                "Abonentlar guruhiga telefon orqali bir vaqtning o'zida birgalikda muloqot qilish imkonini beradi",
+                "Faqat matnli xabarlar yuborish imkonini beradi",
+                "Faqat video tasvir uzatish imkonini beradi",
+                "Hujjatlarni skaner qilish imkonini beradi"
             ],
             correct: 0
         },
         {
-            id: 12, points: 30, cat: 'hard',
-            question: "Veb-konferensiya paytida ishtirokchilarga xalaqit bermasdan o'z fikrini bildirish uchun mo'ljallangan ikonka qaysi?",
+            id: 11, points: 20, cat: 'medium',
+            question: "LAN (Lokal tarmoq)ning asosiy xarakteristikasi qaysi?",
             options: [
-                "Leave Meeting tugmasi",
-                "Namadir demoqchi ekaningizni ko'rsatish maqsadida ko'tarilgan qo'lni ifodalovchi ikonka",
-                "Faks yuborish tugmasi",
-                "Kompyuterni o'chirish tugmasi"
+                "Kichik geografik hududda (masalan, idorada) yuqori tezlik va xavfsizlikni ta'minlaydi",
+                "Butun dunyoni qamrab oluvchi ulkan tarmoq hisoblanadi",
+                "Simsiz ulanishni umuman qo'llab-quvvatlamaydi",
+                "O'rnatish juda qimmat va murakkab"
             ],
-            correct: 1
+            correct: 0
         },
         {
-            id: 13, points: 30, cat: 'hard',
-            question: "Hub va switch qurilmalari haqidagi to'g'ri fikrni toping?",
+            id: 12, points: 20, cat: 'medium',
+            question: "Veb-konferensiya davomida taqdimot qilayotgan shaxsga xalaqit bermaslik uchun qaysi funksiyadan foydalaniladi?",
             options: [
-                "Ular bir xil ko'rinadi, lekin signallar bilan ishlash usuli turlicha",
-                "Ular butunlay har xil qurilmalar bo'lib, bir xil vazifani bajarmaydi",
-                "Hub switchdan doim tezroq ishlaydi",
-                "Switch faqat telefon liniyalarini ulash uchun kerak"
+                "Ovozni o'chirib qo'yish (Mute) funksiyasidan",
+                "Leave Meeting tugmasini bosishdan",
+                "Kamerani sindirishdan",
+                "Kompyuterni o'chirishdan"
+            ],
+            correct: 0
+        },
+
+        // --- QIYIN (30 ball) ---
+        {
+            id: 13, points: 30, cat: 'hard',
+            question: "Kompyuteringizga ochiq tarmoq portlari orqali ruxsatsiz buzib kirishlarning oldini oluvchi vosita qaysi?",
+            options: [
+                "To'g'ri sozlangan Xavfsizlik devori (Firewall)",
+                "Oddiy simsiz sichqoncha",
+                "Karnay va mikrofon",
+                "USB fleshka"
             ],
             correct: 0
         },
         {
             id: 14, points: 30, cat: 'hard',
-            question: "Faks orqali hujjat yuborishning afzalliklaridan biri qaysi?",
+            question: "Hub va Switch tarmoq qurilmalari bir-biriga o'xshash bo'lsada, ularning asosiy farqi nimada?",
             options: [
-                "Qo'shimcha qurilma va telefon liniyasini talab qilmaydi",
-                "Qog'ozsiz aloqani taklif qiladi, shuning uchun atrof-muhitga zararsiz",
-                "Dunyoning istalgan nuqtasidan faks yuborish va qabul qilish mumkin, atrof-muhitga zararsiz",
-                "Internetni talab qiladi va viruslar tarqatadi"
+                "Signallar bilan ishlash usuli va ma'lumotni aynan kerakli qurilmaga yo'naltirishi bilan farqlanadi",
+                "Hub faqat Wi-Fi uzatadi, Switch esa simli ishlaydi",
+                "Ular o'rtasida hech qanday farq yo'q",
+                "Switch faqat monitorga ulanadi"
             ],
-            correct: 2
+            correct: 0
         },
         {
             id: 15, points: 30, cat: 'hard',
-            question: "Restoran biznesida bir nechta kompyuter mavjud va kelajakda boshqa restoranlar ham tarmoqqa qo'shilishi rejalashtirilganda qanday tarmoq tavsiya qilinadi va nima uchun?",
+            question: "Eskirgan yoki buzuq qurilmalardan foydalanish tarmoqda qanday oqibatlarga olib kelishi mumkin?",
             options: [
-                "LAN - chunki u eng qimmat tarmoq",
-                "WAN - chunki WAN qimmat, ammo uni o'rnatish LAN yoki WLAN ga qaraganda ancha oson (geografik qamrovi kengayishiga mos)",
-                "Faqat Bluetooth tarmog'i",
-                "Tarmoqlarni birlashtirib bo'lmaydi"
+                "Tarmoq xavfsizligi zaiflashib, nosozliklar va ma'lumot yo'qolishiga olib kelishi mumkin",
+                "Tarmoq tezligi avtomati ravishda 10 barobar oshadi",
+                "Antivirus dasturlari ishlamay qoladi",
+                "Hech qanday salbiy oqibat bo'lmaydi"
             ],
-            correct: 1
+            correct: 0
+        },
+        {
+            id: 16, points: 30, cat: 'hard',
+            question: "Faks va elektron pochtani solishtirganda, elektron pochtaning faksdan afzalligi qaysi?",
+            options: [
+                "Fayllarni ilova qilish imkoniyati va spamlarni filtrlash osonligi",
+                "Qog'oz ko'rinishida chop etib berishi",
+                "Telefon liniyasini talab qilishi",
+                "Faqat bitta xona ichida ishlashi"
+            ],
+            correct: 0
+        },
+        {
+            id: 17, points: 30, cat: 'hard',
+            question: "Shaxsiy ma'lumotlarni himoya qilish to'g'risidagi qonunlarning asosiy tamoyillaridan biri nima?",
+            options: [
+                "Ma'lumotlardan qonuniy va adolatli tarzda foydalanish hamda maxfiylikni ta'minlash",
+                "Barcha ma'lumotlarni internetga ochiq joylashtirish",
+                "Foydalanuvchiga bilmasdan ma'lumotlarni o'chirish",
+                "Parollarni barchaga ulashish"
+            ],
+            correct: 0
+        },
+        {
+            id: 18, points: 30, cat: 'hard',
+            question: "Bir nechta uzoq masofadagi filiallarga ega restoranlar tarmog'i uchun eng mos keluvchi tarmoq turi qaysi?",
+            options: [
+                "WAN (Wide Area Network) - uzoq masofalarni birlashtira olgani uchun",
+                "Faqat Bluetooth tarmog'i",
+                "Faqat Lokal (LAN) tarmog'i",
+                "Infraqizil nurlar tarmog'i"
+            ],
+            correct: 0
         }
     ];
 
+    let teamNames = ["1-Jamoa", "2-Jamoa", "3-Jamoa"];
     let scores = [0, 0, 0];
     let activeQuestionId = null;
     let currentShuffledOptions = [];
+    let answeredCount = 0;
 
-    // Sahifa yuklanganda taxtani yaratish
+    function startGame() {
+        const t1 = document.getElementById('input-team1').value.trim() || "1-Jamoa";
+        const t2 = document.getElementById('input-team2').value.trim() || "2-Jamoa";
+        const t3 = document.getElementById('input-team3').value.trim() || "3-Jamoa";
+
+        teamNames = [t1, t2, t3];
+
+        document.getElementById('t1-display-name').innerText = t1;
+        document.getElementById('t2-display-name').innerText = t2;
+        document.getElementById('t3-display-name').innerText = t3;
+
+        document.getElementById('setupModal').style.display = 'none';
+        initBoard();
+    }
+
     function initBoard() {
         const cat10 = document.getElementById('category-10');
         const cat20 = document.getElementById('category-20');
@@ -525,7 +796,7 @@
         questions.forEach((q) => {
             const btn = document.createElement('button');
             btn.className = `q-btn ${q.cat}`;
-            btn.innerText = `${q.points} ball`;
+            btn.innerText = `${q.points} BALL`;
             btn.id = `q-btn-${q.id}`;
             btn.onclick = () => openQuestion(q.id);
 
@@ -547,31 +818,30 @@
         document.getElementById('team2-score').innerText = scores[1];
         document.getElementById('team3-score').innerText = scores[2];
 
-        const t1Name = document.getElementById('team1-name').value;
-        const t2Name = document.getElementById('team2-name').value;
-        const t3Name = document.getElementById('team3-name').value;
-
         const select = document.getElementById('answeringTeam');
-        select.options[0].text = t1Name;
-        select.options[1].text = t2Name;
-        select.options[2].text = t3Name;
+        select.innerHTML = '';
+        teamNames.forEach((name, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.innerText = name;
+            select.appendChild(opt);
+        });
     }
 
     function openQuestion(id) {
         activeQuestionId = id;
         const q = questions.find(item => item.id === id);
 
-        document.getElementById('modalCategoryTitle').innerText = `Savol #${q.id} (${q.cat.toUpperCase()})`;
-        document.getElementById('modalPoints').innerText = `${q.points} ball`;
+        document.getElementById('modalCategoryTitle').innerText = `SAVOL #${q.id}`;
+        document.getElementById('modalPoints').innerText = `${q.points} BALL`;
         document.getElementById('modalQuestionText').innerText = q.question;
 
-        // Variantlarni to'g'ri javob bilan birga bog'lab olamiz
+        // Variantlarni to'g'ri javob bilan bog'lab aralashtiramiz
         let optionsArr = q.options.map((opt, idx) => ({
             text: opt,
             isCorrect: idx === q.correct
         }));
 
-        // Fisher-Yates algoritmi yordamida javoblarni aralashtiramiz (tasodifiy tartibda chiqadi)
         for (let i = optionsArr.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             [optionsArr[i], optionsArr[j]] = [optionsArr[j], optionsArr[i]];
@@ -597,16 +867,10 @@
 
     function selectOption(idx) {
         window.selectedOptionIdx = idx;
-
-        // Barcha variantlar rangini tozalash
         currentShuffledOptions.forEach((_, i) => {
-            document.getElementById(`opt-${i}`).style.background = '#f9fafb';
-            document.getElementById(`opt-${i}`).style.borderColor = '#e5e7eb';
+            document.getElementById(`opt-${i}`).classList.remove('selected');
         });
-
-        // Tanlanganni belgilash
-        document.getElementById(`opt-${idx}`).style.background = '#eef2ff';
-        document.getElementById(`opt-${idx}`).style.borderColor = 'var(--primary)';
+        document.getElementById(`opt-${idx}`).classList.add('selected');
     }
 
     function checkAnswer() {
@@ -617,41 +881,84 @@
 
         const q = questions.find(item => item.id === activeQuestionId);
         const teamIdx = parseInt(document.getElementById('answeringTeam').value);
-
-        // Aralashgan massivdan to'g'ri javob turgan yangi indeksni topamiz
         const correctShuffledIdx = currentShuffledOptions.findIndex(opt => opt.isCorrect);
         
-        // To'g'ri va noto'g'ri ranglarni ko'rsatish
         document.getElementById(`opt-${correctShuffledIdx}`).classList.add('correct');
+
         if (window.selectedOptionIdx !== correctShuffledIdx) {
             document.getElementById(`opt-${window.selectedOptionIdx}`).classList.add('incorrect');
+            // Noto'g'ri javob berilsa, ball ayiriladi
+            scores[teamIdx] -= q.points;
+            playSound('wrong');
         } else {
+            // To'g'ri javob berilsa, ball qo'shiladi
             scores[teamIdx] += q.points;
+            playSound('correct');
         }
 
         q.answered = true;
+        answeredCount++;
 
-        // Tugmani o'chirish
         document.getElementById(`q-btn-${q.id}`).classList.add('answered');
         document.getElementById(`q-btn-${q.id}`).disabled = true;
 
-        // 1.5 sekunddan keyin oynani yopish
         setTimeout(() => {
             document.getElementById('quizModal').style.display = 'none';
             updateScoresDisplay();
+
+            // Agar barcha 18 ta savolga javob berilgan bo'lsa
+            if (answeredCount === questions.length) {
+                showResults();
+            }
         }, 1500);
     }
 
-    function resetGame() {
-        if (confirm("O'yinni boshqatdan boshlamoqchimisiz? Barcha ballar tozalanadi.")) {
-            scores = [0, 0, 0];
-            questions.forEach(q => q.answered = false);
-            initBoard();
+    function showResults() {
+        playSound('win');
+        
+        // Salyut (Confetti) otilishi
+        if (typeof confetti === 'function') {
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
         }
+
+        const leaderboard = teamNames.map((name, idx) => ({
+            name: name,
+            score: scores[idx]
+        })).sort((a, b) => b.score - a.score);
+
+        const listContainer = document.getElementById('leaderboardContent');
+        listContainer.innerHTML = '';
+
+        leaderboard.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = `leaderboard-item rank-${index + 1}`;
+            
+            let badge = index === 0 ? '🥇 1-O\'RIN' : index === 1 ? '🥈 2-O\'RIN' : '🥉 3-O\'RIN';
+
+            div.innerHTML = `
+                <div>
+                    <span class="rank-badge">${badge}</span>
+                    <strong style="font-size: 1.2rem; color: #fff;">${item.name}</strong>
+                </div>
+                <span style="font-size: 1.5rem; font-weight: bold; color: var(--neon-blue);">${item.score} BALL</span>
+            `;
+            listContainer.appendChild(div);
+        });
+
+        document.getElementById('winnerModal').style.display = 'flex';
     }
 
-    // Ishga tushirish
-    window.onload = initBoard;
+    function resetGame() {
+        scores = [0, 0, 0];
+        answeredCount = 0;
+        questions.forEach(q => q.answered = false);
+        document.getElementById('winnerModal').style.display = 'none';
+        document.getElementById('setupModal').style.display = 'flex';
+    }
 </script>
 
 </body>
