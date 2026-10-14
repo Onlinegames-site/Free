@@ -1,1 +1,396 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamondan Otish: Archer Duel</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            user-select: none;
+            overflow: hidden;
+        }
+        canvas {
+            background: linear-gradient(to bottom, #1e293b, #0f172a);
+            display: block;
+            touch-action: none;
+        }
+        .shop-modal {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen justify-between p-2 font-sans">
+
+    <!-- Yuqori Statistika Paneli -->
+    <header class="flex justify-between items-center bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-slate-800 shadow-xl max-w-3xl mx-auto w-full z-10">
+        <div class="flex items-center space-x-2">
+            <span class="text-amber-400 text-lg">🪙</span>
+            <div>
+                <span class="text-[10px] text-slate-400 uppercase font-semibold block">Tangalar</span>
+                <h2 id="coinsDisplay" class="text-xl font-black text-amber-400">100</h2>
+            </div>
+        </div>
+        <div class="text-center">
+            <span class="text-[10px] text-slate-400 uppercase font-semibold block">Bosqich (Level)</span>
+            <h2 id="levelDisplay" class="text-xl font-black text-emerald-400">1</h2>
+        </div>
+        <div>
+            <button onclick="toggleShop(true)" class="px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold rounded-xl text-xs shadow-lg flex items-center space-x-1.5 transition active:scale-95">
+                <i class="fa-solid fa-store"></i>
+                <span>Do'kon</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- O'yin Canvas Maydoni -->
+    <main class="relative flex-grow max-w-3xl mx-auto w-full my-2 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl flex items-center justify-center">
+        <canvas id="gameCanvas" width="800" height="450" class="w-full h-full rounded-2xl"></canvas>
+        
+        <!-- Boshlanish va Yutuq Ekrani -->
+        <div id="messageOverlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center text-center p-6 z-20">
+            <div class="text-6xl mb-3 animate-bounce">🏹</div>
+            <h1 id="overlayTitle" class="text-3xl font-black mb-2 text-white">Kamondan Otish Dueli</h1>
+            <p id="overlayDesc" class="text-slate-300 text-sm mb-6 max-w-xs">
+                Ekranni barmoq bilan tortib o'qni dushmanga qarating va qo'yib yuboring!
+            </p>
+            <button onclick="startNextLevel()" class="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-2xl shadow-lg transition transform active:scale-95 text-base flex items-center space-x-2">
+                <i class="fa-solid fa-play"></i>
+                <span>Jangni Boshlash</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- DO'KON MODAL OYNASI -->
+    <div id="shopModal" class="fixed inset-0 shop-modal hidden flex-col items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 max-w-md w-full rounded-3xl p-6 shadow-2xl flex flex-col">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                <h3 class="text-xl font-black text-pink-400 flex items-center">
+                    <i class="fa-solid fa-store mr-2"></i> Qurol Do'koni
+                </h3>
+                <button onclick="toggleShop(false)" class="text-slate-400 hover:text-white text-lg font-bold">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 mb-6">
+                <!-- 1. O'q kuchi -->
+                <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-sm text-white">O'q Kuchaytirgich (+Damas)</h4>
+                        <p class="text-xs text-slate-400">Dushmanga ko'proq zarar yetkazadi</p>
+                        <span id="costDamage" class="text-xs text-amber-400 font-bold mt-1 inline-block">Narxi: 50 🪙</span>
+                    </div>
+                    <button onclick="buyShop('damage')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow">
+                        Sotib olish
+                    </button>
+                </div>
+
+                <!-- 2. Hayotni oshirish -->
+                <div class="bg-slate-800/60 p-3.5 rounded-xl border border-slate-700/50 flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold text-sm text-white">Qo'shimcha Hayot (HP)</h4>
+                        <p class="text-xs text-slate-400">Sizning umumiy sog'ligingizni oshiradi</p>
+                        <span id="costHp" class="text-xs text-amber-400 font-bold mt-1 inline-block">Narxi: 70 🪙</span>
+                    </div>
+                    <button onclick="buyShop('hp')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow">
+                        Sotib olish
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="toggleShop(false)" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-sm transition">
+                Chiqish
+            </button>
+        </div>
+    </div>
+
+    <footer class="text-center text-xs text-slate-500">
+        Archer Duel Game &copy; 2026
+    </footer>
+
+    <!-- O'yin Logikasi (JavaScript) -->
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // O'yin o'zgaruvchilari
+        let coins = parseInt(localStorage.getItem('arch_coins')) || 100;
+        let level = parseInt(localStorage.getItem('arch_level')) || 1;
+        let upgradeDamage = parseInt(localStorage.getItem('arch_dmg')) || 10;
+        let maxHp = parseInt(localStorage.getItem('arch_maxhp')) || 100;
+
+        let costDmg = 50;
+        let costHp = 70;
+
+        let player = { x: 100, y: 320, hp: maxHp, maxHp: maxHp };
+        let enemy = { x: 680, y: 320, hp: 50 + level * 20, maxHp: 50 + level * 20 };
+
+        let arrow = null; // Uchib ketayotgan o'q
+        let isAiming = false;
+        let aimStart = { x: 0, y: 0 };
+        let aimCurrent = { x: 0, y: 0 };
+        let gameState = 'IDLE'; // IDLE, AIMING, PLAYER_SHOT, ENEMY_TURN, GAMEOVER, WIN
+
+        updateUI();
+
+        function updateUI() {
+            document.getElementById('coinsDisplay').innerText = coins;
+            document.getElementById('levelDisplay').innerText = level;
+            localStorage.setItem('arch_coins', coins);
+            localStorage.setItem('arch_level', level);
+            localStorage.setItem('arch_dmg', upgradeDamage);
+            localStorage.setItem('arch_maxhp', maxHp);
+        }
+
+        function toggleShop(show) {
+            document.getElementById('shopModal').style.display = show ? 'flex' : 'none';
+        }
+
+        function buyShop(type) {
+            if (type === 'damage' && coins >= costDmg) {
+                coins -= costDmg;
+                upgradeDamage += 5;
+                costDmg = Math.floor(costDmg * 1.5);
+                updateUI();
+                alert("Muvaffaqiyatli xarid qilindi! O'q kuchi oshdi.");
+            } else if (type === 'hp' && coins >= costHp) {
+                coins -= costHp;
+                maxHp += 25;
+                player.maxHp = maxHp;
+                player.hp = maxHp;
+                costHp = Math.floor(costHp * 1.5);
+                updateUI();
+                alert("Muvaffaqiyatli xarid qilindi! Hayotingiz oshdi.");
+            } else {
+                alert("Tangalaringiz yetarli emas! 🪙");
+            }
+        }
+
+        function startNextLevel() {
+            document.getElementById('messageOverlay').style.display = 'none';
+            player.hp = player.maxHp;
+            enemy.maxHp = 40 + level * 25;
+            enemy.hp = enemy.maxHp;
+            arrow = null;
+            gameState = 'AIMING';
+        }
+
+        // Sichqoncha va Touch hodisalari (Tortib otish uchun)
+        canvas.addEventListener('pointerdown', (e) => {
+            if (gameState !== 'AIMING') return;
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            // O'yinchi yaqinidan boshlangan bo'lsa
+            if (Math.hypot(mouseX - player.x, mouseY - player.y) < 100) {
+                isAiming = true;
+                aimStart = { x: player.x, y: player.y };
+                aimCurrent = { x: mouseX, y: mouseY };
+            }
+        });
+
+        canvas.addEventListener('pointermove', (e) => {
+            if (!isAiming) return;
+            const rect = canvas.getBoundingClientRect();
+            aimCurrent.x = e.clientX - rect.left;
+            aimCurrent.y = e.clientY - rect.top;
+        });
+
+        canvas.addEventListener('pointerup', () => {
+            if (!isAiming) return;
+            isAiming = false;
+
+            // O'qni otish kuchi va burchagini hisoblash
+            let vx = (aimStart.x - aimCurrent.x) * 0.15;
+            let vy = (aimStart.y - aimCurrent.y) * 0.15;
+
+            arrow = {
+                x: player.x,
+                y: player.y,
+                vx: vx,
+                vy: vy,
+                active: true,
+                isPlayer: true
+            };
+
+            gameState = 'PLAYER_SHOT';
+        });
+
+        // O'yin render sikli
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Yer chizig'i
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(0, 380, canvas.width, 70);
+
+            // O'yinchini chizish (Stickman Archer)
+            drawStickman(player.x, player.y, '#38bdf8', 'O\'yinchi');
+            drawHealthBar(player.x, player.y - 50, player.hp, player.maxHp);
+
+            // Dushmanni chizish
+            drawStickman(enemy.x, enemy.y, '#f43f5e', `Dushman Lvl ${level}`);
+            drawHealthBar(enemy.x, enemy.y - 50, enemy.hp, enemy.maxHp);
+
+            // Tortish trayektoriyasi chizig'i
+            if (isAiming) {
+                ctx.beginPath();
+                ctx.moveTo(player.x, player.y);
+                let predX = player.x + (aimStart.x - aimCurrent.x) * 0.15 * 10;
+                let predY = player.y + (aimStart.y - aimCurrent.y) * 0.15 * 10;
+                ctx.lineTo(predX, predY);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // O'q harakati va fizikasini boshqarish
+            if (arrow && arrow.active) {
+                arrow.x += arrow.vx;
+                arrow.y += arrow.vy;
+                arrow.vy += 0.25; // Tortishish kuchi (Gravity)
+
+                // O'qni chizish
+                ctx.save();
+                ctx.translate(arrow.x, arrow.y);
+                let angle = Math.atan2(arrow.vy, arrow.vx);
+                ctx.rotate(angle);
+                ctx.fillStyle = '#fbbf24';
+                ctx.fillRect(-15, -2, 30, 4);
+                ctx.restore();
+
+                // Dushmanga tegishini tekshirish (Player shot)
+                if (arrow.isPlayer && Math.hypot(arrow.x - enemy.x, arrow.y - enemy.y) < 35) {
+                    enemy.hp -= upgradeDamage;
+                    arrow.active = false;
+                    checkBattleStatus();
+                }
+
+                // O'yinchiga tegishini tekshirish (Enemy shot)
+                else if (!arrow.isPlayer && Math.hypot(arrow.x - player.x, arrow.y - player.y) < 35) {
+                    player.hp -= (10 + level * 2);
+                    arrow.active = false;
+                    checkBattleStatus();
+                }
+
+                // Yergacha tushib ketsa
+                if (arrow.y > 380 || arrow.x < 0 || arrow.x > canvas.width) {
+                    arrow.active = false;
+                    checkBattleStatus();
+                }
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function drawStickman(x, y, color, name) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 4;
+            ctx.fillStyle = color;
+
+            // Bosh
+            ctx.beginPath();
+            ctx.arc(x, y - 30, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Tanasi
+            ctx.beginPath();
+            ctx.moveTo(x, y - 20);
+            ctx.lineTo(x, y + 10);
+            ctx.stroke();
+
+            // Oyoqlari
+            ctx.beginPath();
+            ctx.moveTo(x, y + 10);
+            ctx.lineTo(x - 12, y + 40);
+            ctx.moveTo(x, y + 10);
+            ctx.lineTo(x + 12, y + 40);
+            ctx.stroke();
+
+            // Qo'llari va Kamon
+            ctx.beginPath();
+            ctx.moveTo(x, y - 10);
+            ctx.lineTo(x + (color === '#38bdf8' ? 15 : -15), y + 5);
+            ctx.stroke();
+
+            // Ismi
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(name, x, y - 48);
+        }
+
+        function drawHealthBar(x, y, hp, maxHp) {
+            let width = 60;
+            let height = 8;
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(x - width / 2, y, width, height);
+
+            let hpWidth = Math.max(0, (hp / maxHp) * width);
+            ctx.fillStyle = hp > maxHp * 0.3 ? '#10b981' : '#f43f5e';
+            ctx.fillRect(x - width / 2, y, hpWidth, height);
+        }
+
+        function checkBattleStatus() {
+            if (enemy.hp <= 0) {
+                // Yutuq
+                coins += 30 + level * 10;
+                level++;
+                updateUI();
+                showOverlay("Tabriklayman! Gʻalaba! 🏆", `Siz dushmanni yengdingiz va keyingi bosqichga o'tdingiz. Mukofot: +${30 + (level-1)*10} 🪙`);
+            } else if (player.hp <= 0) {
+                // Mag'lubiyat
+                showOverlay("Magʻlubiyat! 💀", "Dushman sizni yengdi. Qayta urinib ko'ring!");
+            } else {
+                // Navbat almashishi
+                if (gameState === 'PLAYER_SHOT') {
+                    gameState = 'ENEMY_TURN';
+                    setTimeout(enemyShoot, 800);
+                } else if (gameState === 'ENEMY_TURN') {
+                    gameState = 'AIMING';
+                }
+            }
+        }
+
+        function enemyShoot() {
+            if (player.hp <= 0 || enemy.hp <= 0) return;
+
+            // Dushman o'q otish trayektoriyasi
+            let dx = player.x - enemy.x;
+            let dy = player.y - enemy.y;
+            let vx = dx * 0.035;
+            let vy = dy * 0.035 - 3.5;
+
+            arrow = {
+                x: enemy.x,
+                y: enemy.y,
+                vx: vx,
+                vy: vy,
+                active: true,
+                isPlayer: false
+            };
+        }
+
+        function showOverlay(title, desc) {
+            document.getElementById('overlayTitle').innerText = title;
+            document.getElementById('overlayDesc').innerText = desc;
+            document.getElementById('messageOverlay').style.display = 'flex';
+        }
+
+        // O'yinni ishga tushirish
+        gameLoop();
+    </script>
+</body>
+</html>
 
