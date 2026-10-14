@@ -37,9 +37,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-            background: rgba(0,0,0,0.4);
-            border-bottom: 1px solid #333;
+            padding: 12px 15px;
+            background: #1a1a1a;
+            border-bottom: 2px solid #333;
         }
         .stats {
             display: flex;
@@ -50,45 +50,73 @@
         .coin-val { color: #ffd700; }
         .level-val { color: #4caf50; }
 
-        /* Canvas */
+        .head-btn {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .head-btn:hover { background: #444; }
+
+        /* Canvas Wrap */
+        .canvas-wrapper {
+            position: relative;
+            width: 480px;
+            height: 400px;
+        }
         canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
             display: block;
+        }
+        #gameCanvas {
             background: #87CEEB;
             transition: background 0.5s;
+            z-index: 1;
+        }
+        #particle-canvas {
+            pointer-events: none;
+            z-index: 5;
         }
 
         /* Control Panel */
         .controls {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 8px;
             padding: 15px;
-            background: #1e1e1e;
+            background: #181818;
         }
         .btn {
-            background: #333;
+            background: #2a2a2a;
             color: #fff;
-            border: none;
+            border: 1px solid #444;
             padding: 12px;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .btn:hover { background: #444; transform: translateY(-2px); }
+        .btn:hover { background: #3d3d3d; transform: translateY(-2px); }
         .btn:active { transform: translateY(0); }
-        .btn-action { background: #ff9800; }
-        .btn-action:hover { background: #fb8c00; }
+        .btn-action { background: #d97706; border-color: #f59e0b; }
+        .btn-action:hover { background: #b45309; }
 
         /* UI Overlays */
         .overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.88);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -98,45 +126,43 @@
         }
         .hidden { display: none !important; }
 
-        .title { font-size: 26px; margin-bottom: 15px; color: #4caf50; text-align: center; }
+        .title { font-size: 24px; margin-top: 0; margin-bottom: 15px; color: #4caf50; text-align: center; }
         
         /* Shop Styles */
         .shop-tabs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 15px;
         }
         .tab-btn {
-            padding: 6px 12px;
+            padding: 8px 14px;
             background: #333;
-            border: none;
+            border: 1px solid #555;
             color: #fff;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
+            font-weight: bold;
         }
-        .tab-btn.active { background: #4caf50; }
+        .tab-btn.active { background: #4caf50; border-color: #81c784; }
 
         .shop-items {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             width: 100%;
-            max-height: 250px;
+            max-height: 230px;
             overflow-y: auto;
             padding-right: 5px;
         }
         .shop-item {
-            background: #2a2a2a;
+            background: #282828;
             border: 1px solid #444;
             padding: 10px;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
-        }
-        .shop-item img-placeholder {
-            font-size: 24px;
+            gap: 6px;
         }
         .buy-btn {
             width: 100%;
@@ -149,14 +175,18 @@
             font-weight: bold;
         }
         .buy-btn.equipped { background: #4caf50; }
-        .buy-btn:disabled { background: #555; cursor: not-allowed; }
+        .buy-btn:disabled { opacity: 0.8; cursor: default; }
 
-        /* Particle Canvas for Win Effect */
-        #particle-canvas {
-            position: absolute;
-            top: 0; left: 0;
-            pointer-events: none;
-            z-index: 5;
+        .close-btn {
+            margin-top: 15px;
+            width: 100%;
+            background: #e53935;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -169,13 +199,43 @@
             <div>Tangalar: <span id="coin-num" class="coin-val">0</span> 🪙</div>
         </div>
         <div>
-            <button class="btn" style="padding: 5px 10px; font-size: 14px;" onclick="toggleShop()">🏪 Do'kon</button>
-            <button class="btn" style="padding: 5px 10px; font-size: 14px; margin-left: 5px;" onclick="toggleDaily()">📅 Kunlik</button>
+            <button class="head-btn" onclick="openShop()">🏪 Do'kon</button>
+            <button class="head-btn" onclick="openDaily()">📅 Kunlik</button>
         </div>
     </div>
 
-    <canvas id="gameCanvas" width="480" height="400"></canvas>
-    <canvas id="particle-canvas" width="480" height="400"></canvas>
+    <div class="canvas-wrapper">
+        <canvas id="gameCanvas" width="480" height="400"></canvas>
+        <canvas id="particle-canvas" width="480" height="400"></canvas>
+
+        <!-- Shop Overlay -->
+        <div id="shop-overlay" class="overlay hidden">
+            <h2 class="title">🏪 Do'kon</h2>
+            <div class="shop-tabs">
+                <button class="tab-btn active" onclick="switchShopTab('food', event)">Mevalar</button>
+                <button class="tab-btn" onclick="switchShopTab('bg', event)">Fonlar</button>
+                <button class="tab-btn" onclick="switchShopTab('portal', event)">Portallar</button>
+            </div>
+            <div id="shop-list" class="shop-items"></div>
+            <button class="close-btn" onclick="closeShop()">Yopish</button>
+        </div>
+
+        <!-- Daily Reward Overlay -->
+        <div id="daily-overlay" class="overlay hidden">
+            <h2 class="title">📅 Kunlik Sovg'a</h2>
+            <p id="daily-msg" style="text-align: center; margin-bottom: 20px;">Bugungi mukofotingizni oling!</p>
+            <button id="claim-btn" class="btn btn-action" style="width: 100%;" onclick="claimDaily()">🎁 50 Tanga Olish</button>
+            <button class="close-btn" onclick="closeDaily()">Yopish</button>
+        </div>
+
+        <!-- Win Overlay -->
+        <div id="win-overlay" class="overlay hidden">
+            <h2 class="title">🎉 G'alaba!</h2>
+            <p>Ajoyib! Bosqichdan muvaffaqiyatli o'tdingiz!</p>
+            <p style="font-size: 18px;">Mukofot: <span id="win-coins" class="coin-val">+20</span> 🪙</p>
+            <button class="btn btn-action" style="width: 100%; margin-top: 10px;" onclick="nextLevel()">Keyingi Bosqich ➡️</button>
+        </div>
+    </div>
 
     <div class="controls">
         <div></div>
@@ -188,47 +248,19 @@
         <button class="btn" onclick="moveSnake('down')">⬇️</button>
         <div></div>
     </div>
-
-    <!-- Shop Overlay -->
-    <div id="shop-overlay" class="overlay hidden">
-        <h2 class="title">🏪 Do'kon</h2>
-        <div class="shop-tabs">
-            <button class="tab-btn active" onclick="switchShopTab('food')">Mevalar</button>
-            <button class="tab-btn" onclick="switchShopTab('bg')">Fonlar</button>
-            <button class="tab-btn" onclick="switchShopTab('portal')">Portallar</button>
-        </div>
-        <div id="shop-list" class="shop-items"></div>
-        <button class="btn" style="margin-top: 15px; width: 100%;" onclick="toggleShop()">Yopish</button>
-    </div>
-
-    <!-- Daily Reward Overlay -->
-    <div id="daily-overlay" class="overlay hidden">
-        <h2 class="title">📅 Kunlik Sovg'a</h2>
-        <p id="daily-msg" style="text-align: center; margin-bottom: 20px;">Bugungi mukofotingizni oling!</p>
-        <button id="claim-btn" class="btn btn-action" onclick="claimDaily()">🎁 50 Tanga Olish</button>
-        <button class="btn" style="margin-top: 15px; width: 100%;" onclick="toggleDaily()">Yopish</button>
-    </div>
-
-    <!-- Win Overlay -->
-    <div id="win-overlay" class="overlay hidden">
-        <h2 class="title">🎉 G'alaba!</h2>
-        <p>Ajoyib! Siz bosqichdan o'tdingiz!</p>
-        <p>Mukofot: <span id="win-coins" class="coin-val">+20</span> 🪙</p>
-        <button class="btn btn-action" style="width: 100%; margin-top: 10px;" onclick="nextLevel()">Keyingi Bosqich ➡️</button>
-    </div>
 </div>
 
 <script>
-// --- O'YIN SOZLAMALARI VA HOLATI ---
+// --- O'YIN SOZLAMALARI ---
 const GRID_SIZE = 40;
 const COLS = 12;
 const ROWS = 10;
 
 let coins = parseInt(localStorage.getItem('snake_coins')) || 0;
 let currentLevelIdx = parseInt(localStorage.getItem('snake_level')) || 0;
-let lastDailyClaim = localStorage.getItem('snake_daily') || 0;
+let lastDailyClaim = localStorage.getItem('snake_daily') || '';
 
-// Shop buyumlari
+// Shop xaridlari saqlanishi
 let inventory = JSON.parse(localStorage.getItem('snake_inventory')) || {
     food: ['apple'],
     bg: ['sky'],
@@ -260,10 +292,9 @@ const shopItems = {
     ]
 };
 
-// --- BOSQICHLAR TIZIMI (Levels) ---
-// 0: Bo'sh joy, 1: Blok (Devor), 2: Yem (Meva), 3: Portal
+// --- BOSQICHLAR (Levels) ---
 const levels = [
-    // 1-Bosqich: Oddiy kirish
+    // 1-Bosqich
     {
         snake: [{x: 2, y: 3}, {x: 1, y: 3}],
         food: {x: 4, y: 6},
@@ -273,7 +304,7 @@ const levels = [
             {x: 7, y: 4}, {x: 8, y: 4}, {x: 9, y: 4}
         ]
     },
-    // 2-Bosqich: Qiyinroq to'siqlar
+    // 2-Bosqich
     {
         snake: [{x: 1, y: 2}, {x: 1, y: 1}],
         food: {x: 5, y: 2},
@@ -283,7 +314,7 @@ const levels = [
             {x: 5, y: 6}, {x: 6, y: 6}, {x: 7, y: 6}, {x: 8, y: 6}, {x: 9, y: 6}, {x: 10, y: 6}
         ]
     },
-    // 3-Bosqich: Gravitatsiya va burilishlar talab etiladi
+    // 3-Bosqich
     {
         snake: [{x: 2, y: 1}, {x: 1, y: 1}],
         food: {x: 2, y: 5},
@@ -307,10 +338,10 @@ const ctx = canvas.getContext('2d');
 const particleCanvas = document.getElementById('particle-canvas');
 const pCtx = particleCanvas.getContext('2d');
 
-// --- O'YIN LOGIKASI ---
+// --- O'YIN KODI ---
 function loadLevel(idx) {
     if (idx >= levels.length) {
-        alert("Tabriklaymiz! Barcha mavjud bosqichlarni tugatdingiz!");
+        alert("Tabriklaymiz! Barcha mavjud bosqichlarni muvaffaqiyatli tugatdingiz!");
         currentLevelIdx = 0;
     }
     const lvl = levels[currentLevelIdx];
@@ -329,10 +360,11 @@ function updateUI() {
     document.getElementById('lvl-num').innerText = currentLevelIdx + 1;
     document.getElementById('coin-num').innerText = coins;
     
-    // Fon rangini o'rnatish
+    // Fon rangini yangilash
     const activeBg = shopItems.bg.find(b => b.id === equipped.bg);
     canvas.style.background = activeBg ? activeBg.color : '#87CEEB';
     
+    // Malumotlarni saqlash
     localStorage.setItem('snake_coins', coins);
     localStorage.setItem('snake_level', currentLevelIdx);
     localStorage.setItem('snake_inventory', JSON.stringify(inventory));
@@ -343,7 +375,6 @@ function applyGravity() {
     let moved = true;
     while (moved) {
         moved = false;
-        // Barcha ilon bo'g'inlari pastga tusha oladimi deb tekshiramiz
         let canFall = true;
         for (let seg of snake) {
             let nextY = seg.y + 1;
@@ -381,10 +412,9 @@ function moveSnake(dir) {
     if (dir === 'up') head.y -= 1;
     if (dir === 'down') head.y += 1;
 
-    // Chegaralar va bloklar to'siqlari
+    // Devor va bloklar bilan to'qnashuv
     if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) return;
     if (isBlockAt(head.x, head.y)) return;
-    // O'ziga urilish (dumidan tashqari)
     if (isSnakeAt(head.x, head.y) && !(head.x === snake[snake.length-1].x && head.y === snake[snake.length-1].y)) return;
 
     // Harakatlantirish
@@ -393,16 +423,14 @@ function moveSnake(dir) {
     // Meva yeyish
     if (!hasEaten && head.x === food.x && head.y === food.y) {
         hasEaten = true;
-        // Uzayadi (dumi olib tashlanmaydi)
     } else {
         snake.pop();
     }
 
-    // Gravitatsiyani qo'llash
     applyGravity();
     draw();
 
-    // Portalga kirish (G'alaba)
+    // Portalga yetib borish (G'alaba)
     if (head.x === portal.x && head.y === portal.y) {
         winLevel();
     }
@@ -431,72 +459,80 @@ function nextLevel() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // To'siqlar (Bloklar)
-    ctx.fillStyle = '#8B4513';
+    // 1. Yer / To'siqlar (G'isht ko'rinishi)
     blocks.forEach(b => {
-        ctx.fillRect(b.x * GRID_SIZE, b.y * GRID_SIZE, GRID_SIZE - 2, GRID_SIZE - 2);
+        ctx.fillStyle = '#8B4513';
+        ctx.fillRect(b.x * GRID_SIZE, b.y * GRID_SIZE, GRID_SIZE, GRID_SIZE);
         ctx.strokeStyle = '#5c2d0c';
-        ctx.strokeRect(b.x * GRID_SIZE, b.y * GRID_SIZE, GRID_SIZE - 2, GRID_SIZE - 2);
+        ctx.lineWidth = 2;
+        ctx.strokeRect(b.x * GRID_SIZE + 1, b.y * GRID_SIZE + 1, GRID_SIZE - 2, GRID_SIZE - 2);
     });
 
-    // Meva (Ovqat)
+    // 2. Meva (Shopda tanlangan meva)
     if (!hasEaten) {
-        ctx.font = '30px Arial';
+        ctx.font = '28px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        const foodIcon = shopItems.food.find(f => f.id === equipped.food).icon;
+        const foodObj = shopItems.food.find(f => f.id === equipped.food);
+        const foodIcon = foodObj ? foodObj.icon : '🍎';
         ctx.fillText(foodIcon, food.x * GRID_SIZE + GRID_SIZE/2, food.y * GRID_SIZE + GRID_SIZE/2);
     }
 
-    // Portal
-    const portalItem = shopItems.portal.find(p => p.id === equipped.portal);
-    ctx.font = '32px Arial';
+    // 3. Portal
+    const portalObj = shopItems.portal.find(p => p.id === equipped.portal);
+    const portalIcon = portalObj ? portalObj.icon : '🌀';
+    ctx.font = '30px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(portalItem.icon, portal.x * GRID_SIZE + GRID_SIZE/2, portal.y * GRID_SIZE + GRID_SIZE/2);
+    ctx.fillText(portalIcon, portal.x * GRID_SIZE + GRID_SIZE/2, portal.y * GRID_SIZE + GRID_SIZE/2);
 
-    // Ilon
+    // 4. Ilon
     snake.forEach((seg, index) => {
         if (index === 0) {
-            // Bosh
+            // Ilon Boshi
             ctx.fillStyle = '#4CAF50';
             ctx.beginPath();
             ctx.arc(seg.x * GRID_SIZE + GRID_SIZE/2, seg.y * GRID_SIZE + GRID_SIZE/2, GRID_SIZE/2 - 2, 0, Math.PI * 2);
             ctx.fill();
+
             // Ko'zlar
             ctx.fillStyle = '#FFF';
             ctx.beginPath();
-            ctx.arc(seg.x * GRID_SIZE + 12, seg.y * GRID_SIZE + 12, 4, 0, Math.PI * 2);
-            ctx.arc(seg.x * GRID_SIZE + 28, seg.y * GRID_SIZE + 12, 4, 0, Math.PI * 2);
+            ctx.arc(seg.x * GRID_SIZE + 12, seg.y * GRID_SIZE + 14, 5, 0, Math.PI * 2);
+            ctx.arc(seg.x * GRID_SIZE + 28, seg.y * GRID_SIZE + 14, 5, 0, Math.PI * 2);
             ctx.fill();
+
             ctx.fillStyle = '#000';
             ctx.beginPath();
-            ctx.arc(seg.x * GRID_SIZE + 12, seg.y * GRID_SIZE + 12, 2, 0, Math.PI * 2);
-            ctx.arc(seg.x * GRID_SIZE + 28, seg.y * GRID_SIZE + 12, 2, 0, Math.PI * 2);
+            ctx.arc(seg.x * GRID_SIZE + 12, seg.y * GRID_SIZE + 14, 2, 0, Math.PI * 2);
+            ctx.arc(seg.x * GRID_SIZE + 28, seg.y * GRID_SIZE + 14, 2, 0, Math.PI * 2);
             ctx.fill();
         } else {
-            // Tana
+            // Ilon Tanasi
             ctx.fillStyle = '#8BC34A';
-            ctx.fillRect(seg.x * GRID_SIZE + 2, seg.y * GRID_SIZE + 2, GRID_SIZE - 4, GRID_SIZE - 4);
+            ctx.beginPath();
+            ctx.roundRect(seg.x * GRID_SIZE + 3, seg.y * GRID_SIZE + 3, GRID_SIZE - 6, GRID_SIZE - 6, 8);
+            ctx.fill();
         }
     });
 }
 
-// --- DO'KON TIZIMI (Shop) ---
+// --- DO'KON LOGIKASI (Shop) ---
 let currentTab = 'food';
 
-function toggleShop() {
-    const overlay = document.getElementById('shop-overlay');
-    overlay.classList.toggle('hidden');
-    if (!overlay.classList.contains('hidden')) {
-        renderShop();
-    }
+function openShop() {
+    document.getElementById('shop-overlay').classList.remove('hidden');
+    renderShop();
 }
 
-function switchShopTab(tab) {
+function closeShop() {
+    document.getElementById('shop-overlay').classList.add('hidden');
+}
+
+function switchShopTab(tab, event) {
     currentTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    if(event) event.target.classList.add('active');
     renderShop();
 }
 
@@ -510,13 +546,17 @@ function renderShop() {
         
         const div = document.createElement('div');
         div.className = 'shop-item';
+        
+        let iconDisplay = item.icon ? `<span style="font-size:26px">${item.icon}</span>` : 
+            `<div style="width:26px; height:26px; background:${item.color}; border-radius:50%; border:1px solid #fff;"></div>`;
+
         div.innerHTML = `
-            <div style="font-size:24px">${item.icon || '🎨'}</div>
+            ${iconDisplay}
             <div style="font-size:14px; font-weight:bold;">${item.name}</div>
             <button class="buy-btn ${isEquipped ? 'equipped' : ''}" 
                 ${isEquipped ? 'disabled' : ''} 
                 onclick="buyOrEquip('${currentTab}', '${item.id}', ${item.price})">
-                ${isEquipped ? 'Jihozlangan' : isBought ? 'Tanlash' : item.price + ' 🪙'}
+                ${isEquipped ? 'Tanlangan' : isBought ? 'Kiyish' : item.price + ' 🪙'}
             </button>
         `;
         list.appendChild(div);
@@ -529,7 +569,7 @@ function buyOrEquip(type, id, price) {
             coins -= price;
             inventory[type].push(id);
         } else {
-            alert("Tangalar yetarli emas!");
+            alert("Sizda tangalar yetarli emas!");
             return;
         }
     }
@@ -539,51 +579,55 @@ function buyOrEquip(type, id, price) {
     draw();
 }
 
-// --- KUNLIK MUKOFOT TIZIMI (Daily Rewards) ---
-function toggleDaily() {
+// --- KUNLIK MUKOFOT TIZIMI ---
+function openDaily() {
     const overlay = document.getElementById('daily-overlay');
-    overlay.classList.toggle('hidden');
+    overlay.classList.remove('hidden');
     
-    const now = new Date().toDateString();
+    const today = new Date().toDateString();
     const btn = document.getElementById('claim-btn');
     const msg = document.getElementById('daily-msg');
 
-    if (lastDailyClaim === now) {
+    if (lastDailyClaim === today) {
         btn.disabled = true;
         btn.innerText = "Bugun olib bo'lingan";
-        msg.innerText = "Ertaga yana keling!";
+        msg.innerText = "Ertaga yana kelib mukofotingizni oling!";
     } else {
         btn.disabled = false;
         btn.innerText = "🎁 50 Tanga Olish";
-        msg.innerText = "Bugungi mukofotingizni oling!";
+        msg.innerText = "Bugungi tekin 50 tangangizni oling!";
     }
+}
+
+function closeDaily() {
+    document.getElementById('daily-overlay').classList.add('hidden');
 }
 
 function claimDaily() {
-    const now = new Date().toDateString();
-    if (lastDailyClaim !== now) {
+    const today = new Date().toDateString();
+    if (lastDailyClaim !== today) {
         coins += 50;
-        lastDailyClaim = now;
-        localStorage.setItem('snake_daily', now);
+        lastDailyClaim = today;
+        localStorage.setItem('snake_daily', today);
         updateUI();
-        toggleDaily();
-        alert("Tabriklaymiz! 50 tanga qo'shildi!");
+        closeDaily();
+        alert("Tabriklaymiz! 50 tanga berildi!");
     }
 }
 
-// --- EFFEKTLAR TIZIMI (Particles) ---
+// --- ZARRACHALAR EFFEKTI (Particles) ---
 let particles = [];
 function triggerParticles() {
     particles = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 50; i++) {
         particles.push({
             x: particleCanvas.width / 2,
             y: particleCanvas.height / 2,
-            vx: (Math.random() - 0.5) * 10,
-            vy: (Math.random() - 0.5) * 10,
+            vx: (Math.random() - 0.5) * 12,
+            vy: (Math.random() - 0.5) * 12,
             color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-            size: Math.random() * 6 + 2,
-            life: 40
+            size: Math.random() * 5 + 3,
+            life: 35
         });
     }
     animateParticles();
@@ -591,7 +635,7 @@ function triggerParticles() {
 
 function animateParticles() {
     pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-    particles.forEach((p, i) => {
+    particles.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
         p.life--;
@@ -606,7 +650,7 @@ function animateParticles() {
     }
 }
 
-// Klaviatura orqali boshqaruv
+// Keyboard / Klaviatura tugmalari
 window.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft' || e.key === 'a') moveSnake('left');
     if (e.key === 'ArrowRight' || e.key === 'd') moveSnake('right');
@@ -615,7 +659,7 @@ window.addEventListener('keydown', e => {
     if (e.key === 'r') resetLevel();
 });
 
-// O'yinni boshlash
+// Boshlanishi
 loadLevel(currentLevelIdx);
 </script>
 </body>
