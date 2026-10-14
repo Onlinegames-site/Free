@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Clicker - Qiziqarli O'yin</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #090d16 1e1b4b 15deg, #111827 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            user-select: none;
+            overflow-x: hidden;
+        }
+        .neon-glow {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+        }
+        .neon-glow:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 40px rgba(236, 72, 153, 0.8);
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-80px) scale(1.3); }
+        }
+        .floating-text {
+            position: absolute;
+            animation: floatUp 0.8s ease-out forwards;
+            pointer-events: none;
+            font-weight: 900;
+            font-size: 24px;
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+        }
+        .shop-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .shop-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased flex flex-col items-center justify-between min-h-screen p-4">
+
+    <!-- Yuqori Panel ( Statistika ) -->
+    <header class="w-full max-w-2xl bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-2xl p-4 flex justify-between items-center shadow-xl">
+        <div class="flex items-center space-x-3">
+            <div class="bg-amber-500/20 p-2.5 rounded-xl border border-amber-500/30 text-amber-400 text-xl">
+                🪙
+            </div>
+            <div>
+                <p class="text-xs text-slate-400 font-semibold uppercase">Tangalar</p>
+                <h2 id="scoreDisplay" class="text-2xl font-black text-white">0</h2>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <p class="text-xs text-slate-400 font-semibold uppercase">Hozirgi Tag</p>
+            <span id="currentTag" class="px-3 py-1 bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-bold">
+                Boshlang'ich o'yinchi
+            </span>
+        </div>
+
+        <div class="text-right">
+            <p class="text-xs text-slate-400 font-semibold uppercase">Sekundiga</p>
+            <span id="cpsDisplay" class="text-emerald-400 font-bold text-sm">+0 / s</span>
+        </div>
+    </header>
+
+    <!-- Asosiy O'yin Maydoni -->
+    <main class="flex flex-col items-center justify-center my-auto py-6 relative w-full">
+        
+        <!-- Klik qilinadigan Katta Neon Tugma -->
+        <div class="relative flex items-center justify-center">
+            <button id="clickBtn" onclick="clickCoin(event)" class="w-48 h-48 md:w-60 md:h-60 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 neon-glow flex flex-col items-center justify-center cursor-pointer transition transform active:scale-95 border-4 border-white/20 shadow-2xl group">
+                <i class="fa-solid fa-bolt text-5xl md:text-6xl text-white group-hover:scale-110 transition animate-pulse"></i>
+                <span class="mt-2 text-white font-black tracking-wider text-sm uppercase">Bos!</span>
+            </button>
+        </div>
+        <p class="text-slate-400 text-sm mt-6">Har bir bosish: <strong id="clickPowerDisplay" class="text-indigo-400">+1</strong> tanga</p>
+
+    </main>
+
+    <!-- Do'kon (Shop) va Elementlar -->
+    <section class="w-full max-w-2xl bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-2xl p-5 shadow-xl mb-4">
+        <h3 class="text-lg font-black mb-4 flex items-center text-pink-400">
+            <i class="fa-solid fa-store mr-2"></i> Kiber Do'kon & Taglar
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-56 overflow-y-auto pr-1">
+            
+            <!-- 1. Klik quvvati -->
+            <div class="shop-card p-3.5 rounded-xl flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold text-sm text-white">Kuchli Bosish (+1)</h4>
+                    <p class="text-xs text-slate-400">Har bosishda +1 tanga qo'shadi</p>
+                    <span id="costClick" class="text-xs text-amber-400 font-bold mt-1 inline-block">Narxi: 15 🪙</span>
+                </div>
+                <button onclick="buyUpgrade('click')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow transition">
+                    Sotib olish
+                </button>
+            </div>
+
+            <!-- 2. Avto Kliker -->
+            <div class="shop-card p-3.5 rounded-xl flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold text-sm text-white">Avto-Bot (+1/s)</h4>
+                    <p class="text-xs text-slate-400">Har sekundda avtomatik tanga yig'adi</p>
+                    <span id="costAuto" class="text-xs text-amber-400 font-bold mt-1 inline-block">Narxi: 50 🪙</span>
+                </div>
+                <button onclick="buyUpgrade('auto')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg shadow transition">
+                    Sotib olish
+                </button>
+            </div>
+
+            <!-- 3. Tag: Pro Gamer -->
+            <div class="shop-card p-3.5 rounded-xl flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold text-sm text-white">Tag: "Pro Gamer" 🎮</h4>
+                    <p class="text-xs text-slate-400">Ismingiz yoniga maxsus maqom</p>
+                    <span class="text-xs text-amber-400 font-bold mt-1 inline-block">Narxi: 200 🪙</span>
+                </div>
+                <button onclick="buyTag('Pro Gamer 🎮', 200, this)" class="px-4 py-2 bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold rounded-lg shadow transition">
+                    Sotib olish
+                </button>
+            </div>
+
+            <!-- 4. Tag: Cyber Legend -->
+            <div class="shop-card p-3.5 rounded-xl flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold text-sm text-white">Tag: "Cyber Legend" ⚡</h4>
+                    <p class="text-xs text-slate-400">Eng zo'r afsonaviy titul</p>
+                    <span class="text-xs text-amber-400 font-bold mt-1 inline-block">Narxi: 1000 🪙</span>
+                </div>
+                <button onclick="buyTag('Cyber Legend ⚡', 1000, this)" class="px-4 py-2 bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold rounded-lg shadow transition">
+                    Sotib olish
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- O'yin Logikasi (JavaScript) -->
+    <script>
+        let score = parseInt(localStorage.getItem('cyber_score')) || 0;
+        let clickPower = parseInt(localStorage.getItem('cyber_clickPower')) || 1;
+        let autoClicker = parseInt(localStorage.getItem('cyber_autoClicker')) || 0;
+        let costClick = parseInt(localStorage.getItem('cyber_costClick')) || 15;
+        let costAuto = parseInt(localStorage.getItem('cyber_costAuto')) || 50;
+        let currentTag = localStorage.getItem('cyber_tag') || "Boshlang'ich o'yinchi";
+
+        // Ekranlarni yangilash
+        function updateUI() {
+            document.getElementById('scoreDisplay').innerText = score;
+            document.getElementById('clickPowerDisplay').innerText = `+${clickPower}`;
+            document.getElementById('cpsDisplay').innerText = `+${autoClicker} / s`;
+            document.getElementById('currentTag').innerText = currentTag;
+            document.getElementById('costClick').innerText = `Narxi: ${costClick} 🪙`;
+            document.getElementById('costAuto').innerText = `Narxi: ${costAuto} 🪙`;
+
+            // Xotiraga saqlash
+            localStorage.setItem('cyber_score', score);
+            localStorage.setItem('cyber_clickPower', clickPower);
+            localStorage.setItem('cyber_autoClicker', autoClicker);
+            localStorage.setItem('cyber_costClick', costClick);
+            localStorage.setItem('cyber_costAuto', costAuto);
+            localStorage.setItem('cyber_tag', currentTag);
+        }
+
+        // Tugmani bosganda tanga qo'shish va effekt chiqarish
+        function clickCoin(event) {
+            score += clickPower;
+            updateUI();
+
+            // Bosilgan joyda uchib chiquvchi matn effekti
+            const x = event.clientX || (event.touches ? event.touches[0].clientX : window.innerWidth / 2);
+            const y = event.clientY || (event.touches ? event.touches[0].clientY : window.innerHeight / 2);
+
+            const floatEl = document.createElement('div');
+            floatEl.className = 'floating-text';
+            floatEl.innerText = `+${clickPower}`;
+            floatEl.style.left = `${x - 15}px`;
+            floatEl.style.top = `${y - 30}px`;
+            document.body.appendChild(floatEl);
+
+            setTimeout(() => {
+                floatEl.remove();
+            }, 800);
+        }
+
+        // Yangilanishlarni sotib olish
+        function buyUpgrade(type) {
+            if (type === 'click') {
+                if (score >= costClick) {
+                    score -= costClick;
+                    clickPower += 1;
+                    costClick = Math.floor(costClick * 1.5);
+                    updateUI();
+                } else {
+                    alert("Tangalaringiz yetarli emas! 🪙");
+                }
+            } else if (type === 'auto') {
+                if (score >= costAuto) {
+                    score -= costAuto;
+                    autoClicker += 1;
+                    costAuto = Math.floor(costAuto * 1.6);
+                    updateUI();
+                } else {
+                    alert("Tangalaringiz yetarli emas! 🪙");
+                }
+            }
+        }
+
+        // Tag sotib olish
+        function buyTag(tagName, price, btn) {
+            if (score >= price) {
+                score -= price;
+                currentTag = tagName;
+                updateUI();
+                alert(`Tabriklayman! Yangi tag sotib oldingiz: ${tagName}`);
+            } else {
+                alert("Bu tag uchun tangalar yetarli emas! 🪙");
+            }
+        }
+
+        // Avtomatik sekundlik tanga yig'ish (Auto-clicker)
+        setInterval(() => {
+            if (autoClicker > 0) {
+                score += autoClicker;
+                updateUI();
+            }
+        }, 1000);
+
+        // Sahifa ochilganda UI ni yuklash
+        updateUI();
+    </script>
+</body>
+</html>
