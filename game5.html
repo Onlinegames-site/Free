@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarmoq muammolari va kommunikatsiya - Jamoaviy Viktorina</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 2.2rem;
+        }
+
+        header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        /* Jamoalar paneli */
+        .teams-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .team-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-top: 5px solid var(--primary);
+            transition: transform 0.2s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .team-card input {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 5px;
+            width: 80%;
+            margin-bottom: 10px;
+        }
+
+        .team-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        /* O'yin maydoni - 15 ta test paneli */
+        .board-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .q-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .q-btn:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+            transform: scale(1.03);
+        }
+
+        .q-btn.answered {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+
+        .q-btn.easy { background-color: #10b981; }
+        .q-btn.medium { background-color: #f59e0b; }
+        .q-btn.hard { background-color: #ef4444; }
+
+        /* Modal oyna */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        .modal-question {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            padding: 12px 15px;
+            text-align: left;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #eef2ff;
+            border-color: var(--primary);
+        }
+
+        .option-btn.correct {
+            background: #d1fae5 !important;
+            border-color: var(--success) !important;
+            color: #065f46;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+            color: #991b1b;
+        }
+
+        .team-select-box {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .team-select-box select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+        }
+
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .reset-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .reset-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .reset-btn:hover { background: #4b5563; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Tarmoq muammolari va kommunikatsiya</h1>
+        <p>3 ta jamoa uchun 15 ta qiziqarli interaktiv test (Oson, O'rta, Qiyin)</p>
+    </header>
+
+    <!-- Jamoalar hisoblagichi -->
+    <div class="teams-container">
+        <div class="team-card" style="border-top-color: #3b82f6;">
+            <input type="text" id="team1-name" value="1-Jamoa">
+            <div class="team-score" id="team1-score">0</div>
+            <p>Ball</p>
+        </div>
+        <div class="team-card" style="border-top-color: #10b981;">
+            <input type="text" id="team2-name" value="2-Jamoa">
+            <div class="team-score" id="team2-score">0</div>
+            <p>Ball</p>
+        </div>
+        <div class="team-card" style="border-top-color: #f59e0b;">
+            <input type="text" id="team3-name" value="3-Jamoa">
+            <div class="team-score" id="team3-score">0</div>
+            <p>Ball</p>
+        </div>
+    </div>
+
+    <!-- O'yin taxtasi -->
+    <div class="board-section">
+        <div class="category-title" style="color: #10b981;">1-Bo'lim: Oson savollar (10 ball)</div>
+        <div class="questions-grid" id="category-10"></div>
+
+        <div class="category-title" style="color: #f59e0b;">2-Bo'lim: O'rta qiyinlikdagi savollar (20 ball)</div>
+        <div class="questions-grid" id="category-20"></div>
+
+        <div class="category-title" style="color: #ef4444;">3-Bo'lim: Qiyin savollar (30 ball)</div>
+        <div class="questions-grid" id="category-30"></div>
+    </div>
+
+    <div class="reset-container">
+        <button class="reset-btn" onclick="resetGame()">O'yinni qaytadan boshlash</button>
+    </div>
+</div>
+
+<!-- Modal Oyna -->
+<div class="modal" id="quizModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="modalCategoryTitle">Savol</span>
+            <span id="modalPoints">10 ball</span>
+        </div>
+        <div class="modal-question" id="modalQuestionText">Savol matni shu yerda bo'ladi...</div>
+        <div class="options-list" id="modalOptionsList"></div>
+        
+        <div class="team-select-box" id="teamSelectContainer">
+            <label for="answeringTeam">Javob beruvchi jamoa:</label>
+            <select id="answeringTeam">
+                <option value="0">1-Jamoa</option>
+                <option value="1">2-Jamoa</option>
+                <option value="2">3-Jamoa</option>
+            </select>
+            <button class="action-btn" id="submitAnswerBtn" onclick="checkAnswer()">Javobni tasdiqlash</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 15 ta test ma'lumotlari (Darslik asosida)
+    const questions = [
+        // --- OSON (10 ball) ---
+        {
+            id: 1, points: 10, cat: 'easy',
+            question: "Tarmog'ingiz xavfsizligi buzilishining asosiy sabablaridan biri nima?",
+            options: [
+                "Faqat tashqi xakerlarning hujumlari",
+                "Insonning bexosdan yo'l qo'ygan xatolari",
+                "Quyosh nurlanishining kuchayishi",
+                "Kompyuter monitorining qizib ketishi"
+            ],
+            correct: 1
+        },
+        {
+            id: 2, points: 10, cat: 'easy',
+            question: "Ma'lumot to'plash maqsadida tarmoq tizimlariga qasdma-qasd qilinadigan harakatlar qanday ataladi?",
+            options: [
+                "Sanoat josusligi",
+                "Tarmoqni optimallashtirish",
+                "Brauzer sozlamasi",
+                "Ma'lumotlarni arxivlash"
+            ],
+            correct: 0
+        },
+        {
+            id: 3, points: 10, cat: 'easy',
+            question: "Videokonferensiya uchun quyidagi qaysi texnik qurilma talab qilinadi?",
+            options: [
+                "Faqat oddiy qog'oz printeri",
+                "Displey ekrani, mikrofon va karnaylar",
+                "Faqat klaviatura",
+                "Skaner va nusxa ko'chirish mashinasi"
+            ],
+            correct: 1
+        },
+        {
+            id: 4, points: 10, cat: 'easy',
+            question: "\"Faks\" so'zining asl ma'nosi nima?",
+            options: [
+                "Tezkor internet",
+                "O'xshash (facsimile)",
+                "Raqamli kod",
+                "Xavfsizlik devori"
+            ],
+            correct: 1
+        },
+        {
+            id: 5, points: 10, cat: 'easy',
+            question: "Foydalanuvchining harakatlarini yozib oladigan va parollarni o'g'irlashda qo'llaniladigan dastur qanday ataladi?",
+            options: [
+                "Spyware",
+                "Antivirus",
+                "Brauzer",
+                "Drayver"
+            ],
+            correct: 0
+        },
+
+        // --- O'RTA (20 ball) ---
+        {
+            id: 6, points: 20, cat: 'medium',
+            question: "Routeringizning birlamchi kirish ma'lumotlari o'zgartirilmasa, nima sodir bo'lishi mumkin?",
+            options: [
+                "Kompyuter tezligi keskin oshadi",
+                "Odam tarmoq trafigini to'xtatib, maxfiy ma'lumotlaringizga ulanishi mumkin",
+                "Internet tarmoqdan butunlay uzilib qoladi",
+                "Faks xabarlari tez keladi"
+            ],
+            correct: 1
+        },
+        {
+            id: 7, points: 20, cat: 'medium',
+            question: "Faks va elektron pochta xabarlarini taqqoslash jadvaliga ko'ra quyidagilardan qaysi biri to'g'ri?",
+            options: [
+                "Faksni har doim spam xabar sifatida filtrlash oson",
+                "Elektron pochtaning maxfiy qolishi uchun shifrlash zarur",
+                "Faksga hech qachon virus tushmaydi",
+                "Elektron pochtada xabarlarni bloklab bo'lmaydi"
+            ],
+            correct: 1
+        },
+        {
+            id: 8, points: 20, cat: 'medium',
+            question: "Intranet tarmoqlarining Internetdan asosiy farqi nimada?",
+            options: [
+                "Intranet barcha uchun ochiq",
+                "Intranet faqat sun'iy yo'ldosh orqali ishlaydi",
+                "Intranet tashkilotlar tomonidan yaratiladi va unga kirish qat'iy nazorat qilinadi",
+                "Intranetda tarmoq qurilmalari umuman ishlatilmaydi"
+            ],
+            correct: 2
+        },
+        {
+            id: 9, points: 20, cat: 'medium',
+            question: "Audio-konferensiya nima?",
+            options: [
+                "Abonentlar guruhining telefon uskunalari orqali muloqoti",
+                "Faqat bitta shaxsning matnli yozishmasi",
+                "Videokamera orqali suratga olish",
+                "Faqat faks yuborish usuli"
+            ],
+            correct: 0
+        },
+        {
+            id: 10, points: 20, cat: 'medium',
+            question: "LAN (Local Area Network) tarmoqlarining afzalligi nimadan iborat?",
+            options: [
+                "Geografik qamrovi cheklanmagan va butun dunyoni qamrab oladi",
+                "Oson o'rnatiladi, hamyonbop va kichik geografik hududda tezkor ishlaydi",
+                "Juda qimmat va o'rnatish juda murakkab",
+                "Faqat kosmik stansiyalar uchun mo'ljallangan"
+            ],
+            correct: 1
+        },
+
+        // --- QIYIN (30 ball) ---
+        {
+            id: 11, points: 30, cat: 'hard',
+            question: "Kompyuteringizga to'g'ridan-to'g'ri ulanish imkoni bo'lmagan shaxs internet orqali ochiq tarmoq porti orqali kirishining oldini oluvchi to'g'ri vosita qaysi?",
+            options: [
+                "To'g'ri sozlangan himoya devori (Firewall)",
+                "Oddiy simli karnay",
+                "Veb-kamera",
+                "Printer"
+            ],
+            correct: 0
+        },
+        {
+            id: 12, points: 30, cat: 'hard',
+            question: "Veb-konferensiya paytida ishtirokchilarga xalaqit bermasdan o'z fikrini bildirish uchun mo'ljallangan ikonka qaysi?",
+            options: [
+                "Leave Meeting tugmasi",
+                "Namadir demoqchi ekaningizni ko'rsatish maqsadida ko'tarilgan qo'lni ifodalovchi ikonka",
+                "Faks yuborish tugmasi",
+                "Kompyuterni o'chirish tugmasi"
+            ],
+            correct: 1
+        },
+        {
+            id: 13, points: 30, cat: 'hard',
+            question: "Hub va switch qurilmalari haqidagi to'g'ri fikrni toping?",
+            options: [
+                "Ular bir xil ko'rinadi, lekin signallar bilan ishlash usuli turlicha",
+                "Ular butunlay har xil qurilmalar bo'lib, bir xil vazifani bajarmaydi",
+                "Hub switchdan doim tezroq ishlaydi",
+                "Switch faqat telefon liniyalarini ulash uchun kerak"
+            ],
+            correct: 0
+        },
+        {
+            id: 14, points: 30, cat: 'hard',
+            question: "Faks orqali hujjat yuborishning afzalliklaridan biri qaysi?",
+            options: [
+                "Qo'shimcha qurilma va telefon liniyasini talab qilmaydi",
+                "Qog'ozsiz aloqani taklif qiladi, shuning uchun atrof-muhitga zararsiz",
+                "Dunyoning istalgan nuqtasidan faks yuborish va qabul qilish mumkin, atrof-muhitga zararsiz",
+                "Internetni talab qiladi va viruslar tarqatadi"
+            ],
+            correct: 2
+        },
+        {
+            id: 15, points: 30, cat: 'hard',
+            question: "Restoran biznesida bir nechta kompyuter mavjud va kelajakda boshqa restoranlar ham tarmoqqa qo'shilishi rejalashtirilganda qanday tarmoq tavsiya qilinadi va nima uchun?",
+            options: [
+                "LAN - chunki u eng qimmat tarmoq",
+                "WAN - chunki WAN qimmat, ammo uni o'rnatish LAN yoki WLAN ga qaraganda ancha oson (geografik qamrovi kengayishiga mos)",
+                "Faqat Bluetooth tarmog'i",
+                "Tarmoqlarni birlashtirib bo'lmaydi"
+            ],
+            correct: 1
+        }
+    ];
+
+    let scores = [0, 0, 0];
+    let activeQuestionId = null;
+    let currentShuffledOptions = [];
+
+    // Sahifa yuklanganda taxtani yaratish
+    function initBoard() {
+        const cat10 = document.getElementById('category-10');
+        const cat20 = document.getElementById('category-20');
+        const cat30 = document.getElementById('category-30');
+
+        cat10.innerHTML = '';
+        cat20.innerHTML = '';
+        cat30.innerHTML = '';
+
+        questions.forEach((q) => {
+            const btn = document.createElement('button');
+            btn.className = `q-btn ${q.cat}`;
+            btn.innerText = `${q.points} ball`;
+            btn.id = `q-btn-${q.id}`;
+            btn.onclick = () => openQuestion(q.id);
+
+            if (q.answered) {
+                btn.classList.add('answered');
+                btn.disabled = true;
+            }
+
+            if (q.cat === 'easy') cat10.appendChild(btn);
+            else if (q.cat === 'medium') cat20.appendChild(btn);
+            else if (q.cat === 'hard') cat30.appendChild(btn);
+        });
+
+        updateScoresDisplay();
+    }
+
+    function updateScoresDisplay() {
+        document.getElementById('team1-score').innerText = scores[0];
+        document.getElementById('team2-score').innerText = scores[1];
+        document.getElementById('team3-score').innerText = scores[2];
+
+        const t1Name = document.getElementById('team1-name').value;
+        const t2Name = document.getElementById('team2-name').value;
+        const t3Name = document.getElementById('team3-name').value;
+
+        const select = document.getElementById('answeringTeam');
+        select.options[0].text = t1Name;
+        select.options[1].text = t2Name;
+        select.options[2].text = t3Name;
+    }
+
+    function openQuestion(id) {
+        activeQuestionId = id;
+        const q = questions.find(item => item.id === id);
+
+        document.getElementById('modalCategoryTitle').innerText = `Savol #${q.id} (${q.cat.toUpperCase()})`;
+        document.getElementById('modalPoints').innerText = `${q.points} ball`;
+        document.getElementById('modalQuestionText').innerText = q.question;
+
+        // Variantlarni to'g'ri javob bilan birga bog'lab olamiz
+        let optionsArr = q.options.map((opt, idx) => ({
+            text: opt,
+            isCorrect: idx === q.correct
+        }));
+
+        // Fisher-Yates algoritmi yordamida javoblarni aralashtiramiz (tasodifiy tartibda chiqadi)
+        for (let i = optionsArr.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [optionsArr[i], optionsArr[j]] = [optionsArr[j], optionsArr[i]];
+        }
+        currentShuffledOptions = optionsArr;
+
+        const optionsList = document.getElementById('modalOptionsList');
+        optionsList.innerHTML = '';
+
+        currentShuffledOptions.forEach((optObj, idx) => {
+            const optBtn = document.createElement('button');
+            optBtn.className = 'option-btn';
+            optBtn.innerText = optObj.text;
+            optBtn.onclick = () => selectOption(idx);
+            optBtn.id = `opt-${idx}`;
+            optionsList.appendChild(optBtn);
+        });
+
+        document.getElementById('teamSelectContainer').style.display = 'flex';
+        document.getElementById('quizModal').style.display = 'flex';
+        window.selectedOptionIdx = null;
+    }
+
+    function selectOption(idx) {
+        window.selectedOptionIdx = idx;
+
+        // Barcha variantlar rangini tozalash
+        currentShuffledOptions.forEach((_, i) => {
+            document.getElementById(`opt-${i}`).style.background = '#f9fafb';
+            document.getElementById(`opt-${i}`).style.borderColor = '#e5e7eb';
+        });
+
+        // Tanlanganni belgilash
+        document.getElementById(`opt-${idx}`).style.background = '#eef2ff';
+        document.getElementById(`opt-${idx}`).style.borderColor = 'var(--primary)';
+    }
+
+    function checkAnswer() {
+        if (window.selectedOptionIdx === null) {
+            alert("Iltimos, avval javob variantini tanlang!");
+            return;
+        }
+
+        const q = questions.find(item => item.id === activeQuestionId);
+        const teamIdx = parseInt(document.getElementById('answeringTeam').value);
+
+        // Aralashgan massivdan to'g'ri javob turgan yangi indeksni topamiz
+        const correctShuffledIdx = currentShuffledOptions.findIndex(opt => opt.isCorrect);
+        
+        // To'g'ri va noto'g'ri ranglarni ko'rsatish
+        document.getElementById(`opt-${correctShuffledIdx}`).classList.add('correct');
+        if (window.selectedOptionIdx !== correctShuffledIdx) {
+            document.getElementById(`opt-${window.selectedOptionIdx}`).classList.add('incorrect');
+        } else {
+            scores[teamIdx] += q.points;
+        }
+
+        q.answered = true;
+
+        // Tugmani o'chirish
+        document.getElementById(`q-btn-${q.id}`).classList.add('answered');
+        document.getElementById(`q-btn-${q.id}`).disabled = true;
+
+        // 1.5 sekunddan keyin oynani yopish
+        setTimeout(() => {
+            document.getElementById('quizModal').style.display = 'none';
+            updateScoresDisplay();
+        }, 1500);
+    }
+
+    function resetGame() {
+        if (confirm("O'yinni boshqatdan boshlamoqchimisiz? Barcha ballar tozalanadi.")) {
+            scores = [0, 0, 0];
+            questions.forEach(q => q.answered = false);
+            initBoard();
+        }
+    }
+
+    // Ishga tushirish
+    window.onload = initBoard;
+</script>
+
+</body>
+</html>
