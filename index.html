@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Portal - O'yinlar</title>
+    <title>Game Portal - Bosh Menyu</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -38,59 +38,75 @@
             </h1>
         </div>
         <div class="flex items-center space-x-2 text-sm text-slate-300">
-            <span class="bg-indigo-600/20 border border-indigo-500/30 px-3 py-1 rounded-full text-indigo-300">🇺🇿 / 🇬🇧</span>
+            <span class="bg-indigo-600/20 border border-indigo-500/30 px-3 py-1.5 rounded-full text-indigo-300">
+                <i class="fa-solid fa-fire text-amber-400 mr-1"></i> 3 ta Bo'lim
+            </span>
         </div>
     </header>
 
-    <!-- Asosiy menyu -->
-    <main class="max-w-5xl mx-auto px-4 py-12 w-full flex-grow">
+    <!-- Asosiy menyu (3 ta karta) -->
+    <main class="max-w-6xl mx-auto px-4 py-12 w-full flex-grow">
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-black mb-3">Oʻyinni tanlang</h2>
+            <h2 class="text-4xl font-black mb-3">Oʻyin bo'limini tanlang</h2>
             <p class="text-slate-400 max-w-lg mx-auto">
-                Oʻzingizga qulay o'yinni tanlang va boshlang!
+                Oʻzingizga yoqqan yo'nalishni tanlang va qiziqarli oʻyinlarni boshlang!
             </p>
         </div>
 
-        <!-- Kartochkalar -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- 3 ta Asosiy Kartochkalar Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <!-- 1. O'ZBEKCHA O'YIN (game1.html) -->
+            <!-- 1. O'ZBEKCHA O'YINLAR (game1.html) -->
             <div class="game-card rounded-2xl p-6 flex flex-col justify-between border-t-4 border-t-emerald-500">
                 <div>
-                    <div class="w-full h-44 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-700 flex items-center justify-center mb-5 text-6xl shadow-lg">
+                    <div class="w-full h-40 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-700 flex items-center justify-center mb-5 text-5xl shadow-lg">
                         🇺🇿
                     </div>
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">1-O'yin</span>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-2 text-white">Oʻzbekcha Oʻyin</h3>
+                    <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">1-Bo'lim</span>
+                    <h3 class="text-2xl font-bold mt-3 mb-2 text-white">Oʻzbekcha Oʻyinlar</h3>
                     <p class="text-slate-400 text-sm mb-6">
-                        
+                        O'zbek tilidagi o'yin (game1.html).
                     </p>
                 </div>
-                <button onclick="startGame('uz')" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
+                <button onclick="openGame('uz')" class="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
                     <i class="fa-solid fa-play"></i>
                     <span>Oʻyinni boshlash</span>
                 </button>
             </div>
 
-            <!-- 2. INGLIZCHA O'YIN (game2.html) -->
+            <!-- 2. ENGLISH GAMES (game2.html) -->
             <div class="game-card rounded-2xl p-6 flex flex-col justify-between border-t-4 border-t-indigo-500">
                 <div>
-                    <div class="w-full h-44 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-700 flex items-center justify-center mb-5 text-6xl shadow-lg">
+                    <div class="w-full h-40 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-700 flex items-center justify-center mb-5 text-5xl shadow-lg">
                         🇬🇧
                     </div>
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">2-O'yin</span>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-2 text-white">English Game</h3>
+                    <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">2-Bo'lim</span>
+                    <h3 class="text-2xl font-bold mt-3 mb-2 text-white">English Games</h3>
                     <p class="text-slate-400 text-sm mb-6">
-                        
+                        Ingliz tilidagi o'yin (game2.html).
                     </p>
                 </div>
-                <button onclick="startGame('en')" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
+                <button onclick="openGame('en')" class="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
                     <i class="fa-solid fa-play"></i>
                     <span>Start Game</span>
+                </button>
+            </div>
+
+            <!-- 3. QIZIQARLI O'YINLAR (Kirish tugmasi) -->
+            <div class="game-card rounded-2xl p-6 flex flex-col justify-between border-t-4 border-t-pink-500">
+                <div>
+                    <div class="w-full h-40 rounded-xl bg-gradient-to-tr from-pink-600 to-rose-700 flex items-center justify-center mb-5 text-5xl shadow-lg">
+                        🔥
+                    </div>
+                    <span class="text-xs uppercase font-bold tracking-wider px-2.5 py-1 rounded bg-pink-500/20 text-pink-400 border border-pink-500/30">3-Bo'lim</span>
+                    <h3 class="text-2xl font-bold mt-3 mb-2 text-white">Qiziqarli Oʻyinlar</h3>
+                    <p class="text-slate-400 text-sm mb-6">
+                        Kirish tugmasini bosing va 3 ta qo'shimcha o'yinni tanlang.
+                    </p>
+                </div>
+                <button onclick="openInterestingMenu()" class="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 font-bold text-white shadow-lg transition active:scale-95 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Kirish</span>
                 </button>
             </div>
 
@@ -100,16 +116,22 @@
     <!-- O'YIN OYNASI (Modal) -->
     <div id="gameModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-lg hidden flex-col z-50">
         <div class="p-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
-            <h2 id="currentGameTitle" class="text-xl font-bold text-indigo-400">Game Window</h2>
-            <button onclick="closeGame()" class="px-4 py-2 rounded-lg bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600 hover:text-white transition font-bold flex items-center space-x-2">
+            <div class="flex items-center space-x-3">
+                <button onclick="goBackToMenu()" id="backBtn" class="hidden px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 text-sm font-bold flex items-center space-x-1">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Orqaga</span>
+                </button>
+                <h2 id="modalTitle" class="text-xl font-bold text-indigo-400">O'yin Portal</h2>
+            </div>
+            <button onclick="closeModal()" class="px-4 py-2 rounded-lg bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600 hover:text-white transition font-bold flex items-center space-x-2">
                 <i class="fa-solid fa-xmark"></i>
-                <span>Chiqish / Exit</span>
+                <span>Chiqish</span>
             </button>
         </div>
         
-        <!-- O'yin oynasi -->
-        <div class="flex-grow p-2 flex items-center justify-center overflow-hidden" id="gameContainer">
-            <!-- game1.html yoki game2.html iframe orqali yuklanadi -->
+        <!-- Dinamik kontent maydoni -->
+        <div class="flex-grow p-2 flex items-center justify-center overflow-hidden" id="modalContainer">
+            <!-- Kontent shu yerga yuklanadi -->
         </div>
     </div>
 
@@ -118,39 +140,107 @@
         <p>&copy; 2026 Game Portal.</p>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- JavaScript Logikasi -->
     <script>
-        const games = {
-            'uz': {
-                title: "🇺🇿 O'zbekcha O'yin",
-                content: `<iframe src="game1.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`
-            },
-            'en': {
-                title: "🇬🇧 English Game",
-                content: `<iframe src="game2.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`
-            }
-        };
+        const modal = document.getElementById('gameModal');
+        const modalContainer = document.getElementById('modalContainer');
+        const modalTitle = document.getElementById('modalTitle');
+        const backBtn = document.getElementById('backBtn');
 
-        function startGame(lang) {
-            const modal = document.getElementById('gameModal');
-            const container = document.getElementById('gameContainer');
-            const title = document.getElementById('currentGameTitle');
-
-            if (games[lang]) {
-                title.innerText = games[lang].title;
-                container.innerHTML = games[lang].content;
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+        // 1 va 2-o'yinlarni ochish (game1.html va game2.html)
+        function openGame(type) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            backBtn.classList.add('hidden');
+            
+            if (type === 'uz') {
+                modalTitle.innerText = "🇺🇿 O'zbekcha O'yin";
+                modalContainer.innerHTML = `<iframe src="game1.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`;
+            } else if (type === 'en') {
+                modalTitle.innerText = "🇬🇧 English Game";
+                modalContainer.innerHTML = `<iframe src="game2.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`;
             }
         }
 
-        function closeGame() {
-            const modal = document.getElementById('gameModal');
-            const container = document.getElementById('gameContainer');
+        // 3-bo'lim menyusi (Ichida 3 ta o'yin chiqadi)
+        function openInterestingMenu() {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            backBtn.classList.add('hidden');
+            modalTitle.innerText = "🔥 Qiziqarli O'yinlar Menyusi";
+            
+            modalContainer.innerHTML = `
+                <div class="max-w-4xl w-full p-4 overflow-auto">
+                    <h3 class="text-2xl font-bold text-center mb-6 text-pink-400">Quyidagi 3 ta o'yindan birini tanlang:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        <!-- Mini O'yin 1 (game3.html) -->
+                        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between">
+                            <div>
+                                <div class="text-4xl mb-3 text-center">🎯</div>
+                                <h4 class="text-lg font-bold text-white mb-2">1-O'yin</h4>
+                                <p class="text-slate-400 text-xs mb-4">game3.html faylidagi o'yin.</p>
+                            </div>
+                            <button onclick="startFunGame(3)" class="w-full py-2.5 bg-pink-600 hover:bg-pink-500 text-white rounded-xl font-bold text-sm transition">
+                                Boshlash
+                            </button>
+                        </div>
 
+                        <!-- Mini O'yin 2 (game4.html) -->
+                        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between">
+                            <div>
+                                <div class="text-4xl mb-3 text-center">🧠</div>
+                                <h4 class="text-lg font-bold text-white mb-2">2-O'yin</h4>
+                                <p class="text-slate-400 text-xs mb-4">game4.html faylidagi o'yin.</p>
+                            </div>
+                            <button onclick="startFunGame(4)" class="w-full py-2.5 bg-pink-600 hover:bg-pink-500 text-white rounded-xl font-bold text-sm transition">
+                                Boshlash
+                            </button>
+                        </div>
+
+                        <!-- Mini O'yin 3 (game5.html) -->
+                        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl flex flex-col justify-between">
+                            <div>
+                                <div class="text-4xl mb-3 text-center">🚀</div>
+                                <h4 class="text-lg font-bold text-white mb-2">3-O'yin</h4>
+                                <p class="text-slate-400 text-xs mb-4">game5.html faylidagi o'yin.</p>
+                            </div>
+                            <button onclick="startFunGame(5)" class="w-full py-2.5 bg-pink-600 hover:bg-pink-500 text-white rounded-xl font-bold text-sm transition">
+                                Boshlash
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+        }
+
+        // Qiziqarli o'yinlardagi "Boshlash" bosilganda game3.html, game4.html yoki game5.html ochiladi
+        function startFunGame(gameNum) {
+            backBtn.classList.remove('hidden'); // Orqaga tugmasini chiqarish
+            
+            if (gameNum === 3) {
+                modalTitle.innerText = "🔥 Qiziqarli O'yin 1";
+                modalContainer.innerHTML = `<iframe src="game3.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`;
+            } else if (gameNum === 4) {
+                modalTitle.innerText = "🔥 Qiziqarli O'yin 2";
+                modalContainer.innerHTML = `<iframe src="game4.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`;
+            } else if (gameNum === 5) {
+                modalTitle.innerText = "🔥 Qiziqarli O'yin 3";
+                modalContainer.innerHTML = `<iframe src="game5.html" class="w-full h-full rounded-xl border-0 bg-white"></iframe>`;
+            }
+        }
+
+        // O'yindan "Qiziqarli o'yinlar" menyusiga qaytish
+        function goBackToMenu() {
+            openInterestingMenu();
+        }
+
+        // Modalni to'liq yopish
+        function closeModal() {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            container.innerHTML = '';
+            modalContainer.innerHTML = '';
         }
     </script>
 </body>
