@@ -14,7 +14,7 @@
             --accent-orange: #FF9F43;
             --text-main: #F1F5F9;
             --text-muted: #94A3B8;
-            --border-color: rgba(0, 210, 211, 0.2);
+            --border-color: rgba(0, 210, 211, 0.25);
         }
 
         * {
@@ -42,40 +42,30 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1400px;
+            perspective: 1200px;
             cursor: pointer;
         }
 
         .slide {
             position: absolute;
-            width: 88vw;
-            height: 82vh;
+            width: 82vw;
+            height: 78vh;
             background: var(--card-bg);
             border: 2px solid var(--border-color);
-            border-radius: 24px;
-            padding: 35px 50px;
+            border-radius: 20px;
+            padding: 30px 45px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
             opacity: 0;
             pointer-events: none;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(12px);
-            overflow-y: auto;
-            max-height: 85vh;
+            transform: scale(0.85) translateY(40px) rotateX(15deg);
         }
 
-        /* Custom scrollbar for slides if content is rich */
-        .slide::-webkit-scrollbar {
-            width: 6px;
-        }
-        .slide::-webkit-scrollbar-thumb {
-            background: rgba(0, 210, 211, 0.3);
-            border-radius: 10px;
-        }
-
-        /* Diverse Dynamic Transitions */
+        /* Original Dynamic 3D Transitions */
         .slide.active {
             opacity: 1;
             transform: scale(1) translateY(0) rotateX(0deg) rotateY(0deg);
@@ -83,15 +73,14 @@
             z-index: 10;
         }
 
-        /* Different exit/entry directions based on attributes or classes */
         .slide.prev {
             opacity: 0;
-            transform: scale(0.8) translateX(-150px) rotateY(-25deg) rotateZ(-5deg);
+            transform: scale(0.85) translateX(-120px) rotateY(-20deg);
         }
 
         .slide.next {
             opacity: 0;
-            transform: scale(0.8) translateX(150px) rotateY(25deg) rotateZ(5deg);
+            transform: scale(0.85) translateX(120px) rotateY(20deg);
         }
 
         /* Slide Header */
@@ -100,17 +89,17 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 15px;
-            margin-bottom: 10px;
+            padding-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .slide-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: var(--accent-cyan);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .slide-title i {
@@ -120,10 +109,10 @@
         .slide-badge {
             background: rgba(0, 210, 211, 0.1);
             color: var(--accent-cyan);
-            padding: 6px 16px;
+            padding: 5px 14px;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             border: 1px solid var(--border-color);
         }
 
@@ -133,47 +122,47 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 15px;
-            margin: 10px 0;
+            gap: 12px;
+            margin: 5px 0;
         }
 
         .content-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 15px;
         }
 
         .info-card {
             background: rgba(255, 255, 255, 0.03);
             border-left: 4px solid var(--accent-cyan);
-            padding: 18px 22px;
-            border-radius: 12px;
+            padding: 14px 18px;
+            border-radius: 10px;
             transition: transform 0.3s ease, background 0.3s ease;
         }
 
         .info-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             background: rgba(255, 255, 255, 0.06);
             border-left-color: var(--accent-orange);
         }
 
         .info-card h3 {
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             color: var(--accent-orange);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .info-card p, .info-card ul {
-            font-size: 1rem;
+            font-size: 0.92rem;
             color: var(--text-muted);
-            line-height: 1.5;
+            line-height: 1.45;
         }
 
         .info-card ul {
-            padding-left: 20px;
+            padding-left: 16px;
         }
 
         /* List Styling */
@@ -181,30 +170,24 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .styled-list li {
             display: flex;
             align-items: flex-start;
-            gap: 15px;
-            font-size: 1.05rem;
+            gap: 12px;
+            font-size: 0.95rem;
             background: rgba(255, 255, 255, 0.02);
-            padding: 12px 18px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.2s ease;
-        }
-
-        .styled-list li:hover {
-            transform: translateX(5px);
-            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .styled-list li i {
             color: var(--accent-cyan);
-            margin-top: 4px;
-            font-size: 1.1rem;
+            margin-top: 3px;
+            font-size: 1rem;
         }
 
         /* Table Styling */
@@ -212,15 +195,15 @@
             width: 100%;
             border-collapse: collapse;
             background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
         }
 
         .comparison-table th, .comparison-table td {
-            padding: 14px 18px;
+            padding: 10px 14px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            font-size: 1rem;
+            font-size: 0.92rem;
         }
 
         .comparison-table th {
@@ -241,45 +224,75 @@
         }
 
         .hero-title {
-            font-size: 3.2rem;
+            font-size: 2.8rem;
             font-weight: 800;
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-orange));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .hero-subtitle {
-            font-size: 1.35rem;
+            font-size: 1.2rem;
             color: var(--text-muted);
-            max-width: 800px;
-            line-height: 1.5;
+            max-width: 750px;
+            line-height: 1.45;
         }
 
         .hero-icon {
-            font-size: 4.5rem;
+            font-size: 4rem;
             color: var(--accent-cyan);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 20px var(--accent-cyan)); }
+            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 15px var(--accent-cyan)); }
             100% { transform: scale(1); opacity: 0.8; }
         }
 
-        /* Navigation Controls */
+        /* Side Navigation Buttons (Completely out of slide text areas) */
+        .side-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 210, 211, 0.3);
+        }
+
+        .side-btn:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-dark);
+            transform: translateY(-50%) scale(1.12);
+            box-shadow: 0 0 25px var(--accent-cyan);
+        }
+
+        #prevSideBtn { left: 20px; }
+        #nextSideBtn { right: 20px; }
+
+        /* Bottom Status Counter */
         .controls {
             position: fixed;
-            bottom: 20px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             background: rgba(15, 23, 42, 0.85);
-            padding: 10px 22px;
+            padding: 8px 20px;
             border-radius: 50px;
             border: 1px solid var(--border-color);
             backdrop-filter: blur(10px);
@@ -288,30 +301,8 @@
             cursor: default;
         }
 
-        .nav-btn {
-            background: rgba(0, 210, 211, 0.15);
-            border: 1px solid var(--accent-cyan);
-            color: var(--accent-cyan);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .nav-btn:hover {
-            background: var(--accent-cyan);
-            color: var(--bg-dark);
-            transform: scale(1.1);
-            box-shadow: 0 0 15px var(--accent-cyan);
-        }
-
         .slide-counter {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--text-main);
             letter-spacing: 1px;
@@ -322,7 +313,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
+            height: 4px;
             background: rgba(255, 255, 255, 0.05);
             z-index: 1000;
         }
@@ -341,6 +332,10 @@
     <div class="progress-bar" id="progressBar"></div>
 </div>
 
+<!-- Side Navigation Buttons -->
+<button class="side-btn" id="prevSideBtn" onclick="event.stopPropagation(); changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+<button class="side-btn" id="nextSideBtn" onclick="event.stopPropagation(); changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+
 <div class="presentation-container" id="presentationContainer">
 
     <!-- 1-SAHIFA -->
@@ -354,7 +349,7 @@
             <h1 class="hero-title">Tarmoq muammolari va kommunikatsiya</h1>
             <p class="hero-subtitle">Tarmoq xavfsizligi, ma’lumotlarni himoya qilish, qonunlar va zamonaviy aloqa vositalari haqida mukammal taqdimot.</p>
         </div>
-        <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">Slaydga istalgan joyda bosing yoki o‘q tugmalaridan foydalaning ➔</div>
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">Slaydga istalgan joyda bosing yoki yonidagi tugmalardan foydalaning ➔</div>
     </div>
 
     <!-- 2-SAHIFA -->
@@ -493,7 +488,7 @@
             <span class="slide-badge">8 / 15</span>
         </div>
         <div class="slide-body">
-            <p style="font-size: 1rem; color: var(--text-muted);">Shaxsiy ma’lumotlar xavfsiz tarzda to‘planishi va qayta ishlanishini ta’minlash uchun xalqaro darajada quyidagi tamoyillar amal qiladi:</p>
+            <p style="font-size: 0.92rem; color: var(--text-muted);">Shaxsiy ma’lumotlar xavfsiz tarzda to‘planishi va qayta ishlanishini ta’minlash uchun xalqaro darajada quyidagi tamoyillar amal qiladi:</p>
             <div class="content-grid" style="margin-top: 5px;">
                 <div class="info-card">
                     <h3><i class="fa-solid fa-circle-info"></i> Maqsadli foydalanish</h3>
@@ -643,7 +638,7 @@
             <span class="slide-badge">14 / 15</span>
         </div>
         <div class="slide-body">
-            <p style="font-size: 1rem; color: var(--accent-cyan); font-weight: 600;">O‘zbekiston Respublikasi rasmiy internet manbalari (gov.uz, anhor.uz, infoedu.uz) asosida qo‘shimcha tahlillar:</p>
+            <p style="font-size: 0.92rem; color: var(--accent-cyan); font-weight: 600;">O‘zbekiston Respublikasi rasmiy internet manbalari (gov.uz, anhor.uz, infoedu.uz) asosida qo‘shimcha tahlillar:</p>
             <ul class="styled-list">
                 <li><i class="fa-solid fa-shield-heart"></i> <strong>Kibergigiyena qoidalari:</strong> Shaxsiy parollarni har 3 oyda yangilash, ikki bosqichli autentifikatsiyadan (2FA) doimiy foydalanish tavsiya etiladi.</li>
                 <li><i class="fa-solid fa-building-columns"></i> <strong>Elektron hukumat:</strong> My.gov.uz va boshqa davlat portal xizmatlaridan foydalanganda shifrlangan SSL xavfsiz ulanishlar qo‘llaniladi.</li>
@@ -661,18 +656,16 @@
         <div class="slide-body">
             <i class="fa-solid fa-circle-check hero-icon" style="color: var(--accent-orange);"></i>
             <h1 class="hero-title">Xulosa</h1>
-            <p class="hero-subtitle" style="margin-bottom: 20px;">Tarmoq xavfsizligi texnik va insoniy omillarni birdek hisobga oladi. Parol, himoya devori, anti-spyware va shifrlash ma’lumotlaringizni ishonchli himoya qiladi. Faks, e-pochta va konferensiyalar esa zamonaviy raqamli aloqaning asosidir.</p>
-            <div style="font-size: 1.6rem; font-weight: 700; color: var(--accent-cyan);">E’tiboringiz uchun rahmat! Savollar bormi?</div>
+            <p class="hero-subtitle" style="margin-bottom: 15px;">Tarmoq xavfsizligi texnik va insoniy omillarni birdek hisobga oladi. Parol, himoya devori, anti-spyware va shifrlash ma’lumotlaringizni ishonchli himoya qiladi. Faks, e-pochta va konferensiyalar esa zamonaviy raqamli aloqaning asosidir.</p>
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan);">E’tiboringiz uchun rahmat! Savollar bormi?</div>
         </div>
     </div>
 
 </div>
 
-<!-- Navigation Controls -->
+<!-- Bottom Status Controls -->
 <div class="controls">
-    <button class="nav-btn" id="prevBtn" onclick="event.stopPropagation(); changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
     <div class="slide-counter" id="slideCounter">1 / 15</div>
-    <button class="nav-btn" id="nextBtn" onclick="event.stopPropagation(); changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
 </div>
 
 <script>
